@@ -6,6 +6,7 @@ import { watchCommand } from './commands/watch';
 import { restoreCommand } from './commands/restore';
 import { statusCommand } from './commands/status';
 import { snapshotCommand } from './commands/snapshot';
+import { secureCommand } from './commands/secure';
 
 const program = new Command();
 
@@ -39,6 +40,15 @@ program
   .command('status')
   .description('Show backup status and recent snapshots')
   .action(statusCommand);
+
+program
+  .command('secure')
+  .description('Immutable cloud backups — tamper-proof, AI-proof')
+  .option('--activate <api-key>', 'Activate with your API key from oopsdb.dev/secure')
+  .option('--push', 'Push latest snapshot to immutable cloud storage')
+  .option('--status', 'Show Secure activation status')
+  .option('--deactivate', 'Deactivate OopsDB Secure on this machine')
+  .action(secureCommand);
 
 program.parse(process.argv);
 
