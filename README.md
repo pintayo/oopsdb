@@ -1,67 +1,89 @@
 # OopsDB
 
-Don't let AI nuke your database. Auto-backup and 1-click restore for developers using Claude Code, OpenClaw, and other AI coding agents.
+**Don't let AI nuke your database.**
+
+Auto-backup and 1-click restore for developers using Claude Code, Cursor, Windsurf, and other AI coding agents.
+
+---
 
 ## The Problem
 
-AI coding agents like Claude Code and OpenClaw have terminal access. Sometimes they decide the best way to fix a bug is to `DROP TABLE`, run `terraform destroy`, or wipe your SQLite file. When that happens, you need a backup — fast.
+You're vibing. Claude Code is cranking through tasks. Then it decides the fastest way to fix a migration is `DROP TABLE users`. Or it runs `DELETE FROM orders` without a `WHERE` clause. Or it helpfully "cleans up" your SQLite file.
 
-## Install
+Your data is gone. Your afternoon is gone. Your will to live is negotiable.
+
+## The Fix
 
 ```bash
 npm install -g oopsdb
+oopsdb init      # connect your DB (Postgres, MySQL, SQLite)
+oopsdb watch     # auto-backup every 5 min
+# ... AI nukes your DB ...
+oopsdb restore   # pick a snapshot, roll back instantly
 ```
 
-## Quick Start
+That's it. Three commands. Your data survives the AI apocalypse.
 
-```bash
-# 1. Set up your database connection
-oopsdb init
+## What It Does
 
-# 2. Start auto-backing up (every 5 minutes by default)
-oopsdb watch
-
-# 3. AI nuked your DB? Roll back instantly
-oopsdb restore
-```
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `oopsdb init` | Configure your database connection (PostgreSQL, MySQL, SQLite) |
-| `oopsdb watch` | Start background auto-backups at an interval |
-| `oopsdb watch -i 1` | Auto-backup every 1 minute |
-| `oopsdb snapshot` | Take a one-time manual snapshot |
-| `oopsdb restore` | Pick a snapshot and roll back your database |
-| `oopsdb status` | View backup status and recent snapshots |
+- **Auto-backups** on a timer (`oopsdb watch`) — set it and forget it
+- **Manual snapshots** (`oopsdb snapshot`) — before risky migrations or YOLO prompts
+- **Interactive restore** (`oopsdb restore`) — pick any snapshot, roll back in seconds
+- **Safety snapshots** — automatically backs up your current state before restoring, so you can't oops your oops
+- **Encrypted at rest** — AES-256-CBC encryption on every backup file
+- **Zero cloud, zero accounts** — everything stays on your machine
+- **Streaming backups** — near-zero memory footprint regardless of DB size
 
 ## Supported Databases
 
-- **PostgreSQL** (including Supabase, Neon, and other hosted Postgres)
-- **MySQL / MariaDB**
-- **SQLite**
+| Database | Backup Tool | Restore Tool |
+|----------|------------|--------------|
+| PostgreSQL (Supabase, Neon, local) | `pg_dump` | `psql` |
+| MySQL / MariaDB | `mysqldump` | `mysql` |
+| SQLite | `sqlite3` | `sqlite3` |
+
+## Commands
+
+```
+oopsdb init                Set up your database connection
+oopsdb watch               Auto-backup every 5 minutes
+oopsdb watch -i 1          Auto-backup every 1 minute (paranoid mode)
+oopsdb snapshot            One-time manual backup
+oopsdb restore             Interactive restore from any snapshot
+oopsdb status              View backup history and stats
+oopsdb secure              [Coming Soon] Immutable cloud backups
+```
 
 ## How It Works
 
-1. `oopsdb init` saves your database credentials locally in an encrypted config file (`.oopsdb/config.json`)
-2. `oopsdb watch` runs `pg_dump`, `mysqldump`, or `sqlite3 .backup` at your chosen interval
-3. Snapshots are saved locally in `.oopsdb/backups/` with timestamps
-4. `oopsdb restore` lets you pick any snapshot and restores it — it even takes a safety snapshot first
+1. `oopsdb init` walks you through connecting your database. Credentials are encrypted and saved locally in `.oopsdb/config.json`.
+2. `oopsdb watch` runs the native dump tool (`pg_dump`, `mysqldump`, or `sqlite3 .backup`) at your chosen interval. Output is streamed through AES-256-CBC encryption directly to disk — memory usage stays flat even for large databases.
+3. `oopsdb restore` shows your snapshots with timestamps and sizes. Pick one, confirm, and your database is rolled back. It takes a safety snapshot first, so you can always undo the undo.
 
 ## Requirements
 
-Your system needs the native database tools installed:
+Your system needs the native database CLI tools:
 
-- PostgreSQL: `pg_dump` and `psql`
-- MySQL: `mysqldump` and `mysql`
-- SQLite: `sqlite3`
+- **PostgreSQL**: `pg_dump` + `psql`
+- **MySQL**: `mysqldump` + `mysql`
+- **SQLite**: `sqlite3`
+
+OopsDB checks for these on `init` and gives install instructions if they're missing.
 
 ## Security
 
-- Credentials are encrypted at rest using AES-256-CBC with a machine-local key
-- All backups stay on your local machine — nothing leaves your computer
-- Add `.oopsdb/` to your `.gitignore` (it's already in ours)
+- Credentials encrypted at rest (AES-256-CBC, machine-local key)
+- Backup files encrypted at rest (AES-256-CBC, streaming encryption)
+- Nothing leaves your machine — no cloud, no telemetry, no accounts
+- Add `.oopsdb/` to `.gitignore` (already in ours)
+
+## Coming Soon: `oopsdb secure`
+
+Immutable cloud backups that even a rogue AI can't delete.
+
+Local backups are great until the AI decides to `rm -rf .oopsdb/`. `oopsdb secure` pushes encrypted snapshots to tamper-proof cloud storage with write-once retention policies. Even if your entire machine gets wiped, your backups survive.
+
+Sign up for early access at [oopsdb.dev/secure](https://oopsdb.dev/secure).
 
 ## License
 
