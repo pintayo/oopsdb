@@ -79,5 +79,5 @@ program.parse(process.argv);
 if (!process.argv.slice(2).length) {
   program.outputHelp();
   console.log('\n  \x1b[35mNew:\x1b[0m \x1b[1moopsdb secure\x1b[0m — Immutable cloud backups that even a rogue AI can\'t delete.');
-  console.log('  \x1b[90mLearn more:\x1b[0m \x1b[36mhttps://oopsdb.dev/secure\x1b[0m\n');
+  console.log('  \x1b[90mLearn more:\x1b[0m \x1b[36mhttps://oopsdb.com/secure\x1b[0m\n');
 }

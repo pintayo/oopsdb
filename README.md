@@ -65,7 +65,10 @@ oopsdb watch -i 1          Auto-backup every 1 minute (paranoid mode)
 oopsdb snapshot            One-time manual backup
 oopsdb restore             Interactive restore from any snapshot
 oopsdb status              View backup history and stats
-oopsdb secure              Immutable cloud backups ($8/mo)
+oopsdb activate <key>      Activate a Pro or Secure license
+oopsdb deactivate          Deactivate your license on this machine
+oopsdb license             Show current license status and plan
+oopsdb secure              Immutable cloud backups (Secure plan)
 oopsdb clean               Remove all OopsDB data from project
 ```
 
@@ -98,7 +101,7 @@ Immutable cloud backups that even a rogue AI can't delete.
 
 Local backups are great until the AI decides to `rm -rf .oopsdb/`. `oopsdb secure` pushes encrypted snapshots to tamper-proof cloud storage with write-once retention policies. Even if your entire machine gets wiped, your backups survive.
 
-Sign up for early access at [oopsdb.dev/secure](https://oopsdb.dev/secure).
+Sign up for early access at [oopsdb.com/secure](https://oopsdb.com/secure).
 
 ## License
 

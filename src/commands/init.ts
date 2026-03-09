@@ -49,7 +49,7 @@ export async function initCommand(): Promise<void> {
       console.log(chalk.yellow('\n  ⚠  ' + dbType.charAt(0).toUpperCase() + dbType.slice(1) + ' requires a Pro or Secure license.\n'));
       console.log(chalk.white('  Free plan supports SQLite only.'));
       console.log(chalk.gray('\n  To upgrade:'));
-      console.log(chalk.cyan('    1. ') + chalk.white('Get a license at ') + chalk.cyan('https://oopsdb.dev'));
+      console.log(chalk.cyan('    1. ') + chalk.white('Get a license at ') + chalk.cyan('https://oopsdb.com'));
       console.log(chalk.cyan('    2. ') + chalk.white('Run: ') + chalk.cyan('oopsdb activate <your-license-key>'));
       console.log(chalk.cyan('    3. ') + chalk.white('Run: ') + chalk.cyan('oopsdb init') + chalk.gray(' again\n'));
       return;
@@ -172,7 +172,7 @@ export async function initCommand(): Promise<void> {
   console.log(chalk.gray('  ─────────────────────────────────────────────────'));
   console.log(chalk.magenta('  New: ') + chalk.white('oopsdb secure'));
   console.log(chalk.gray('  Immutable cloud backups that even a rogue AI can\'t delete.'));
-  console.log(chalk.gray('  Learn more: ') + chalk.cyan('oopsdb secure') + chalk.gray(' or ') + chalk.cyan('https://oopsdb.dev/secure'));
+  console.log(chalk.gray('  Learn more: ') + chalk.cyan('oopsdb secure') + chalk.gray(' or ') + chalk.cyan('https://oopsdb.com/secure'));
   console.log();
 }
 
