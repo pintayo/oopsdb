@@ -28,7 +28,8 @@ export async function statusCommand(): Promise<void> {
 
   console.log(chalk.bold('\n  OopsDB Status\n'));
   console.log(chalk.gray('  Database'));
-  console.log(`    Type:     ${chalk.cyan(config.db.type)}`);
+  const typeLabel = config.db.supabase ? 'supabase (postgres)' : config.db.type;
+  console.log(`    Type:     ${chalk.cyan(typeLabel)}`);
   console.log(`    Name:     ${chalk.cyan(config.db.database)}`);
   if (config.db.host) {
     console.log(`    Host:     ${chalk.cyan(config.db.host + ':' + config.db.port)}`);

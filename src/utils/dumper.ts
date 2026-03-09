@@ -33,7 +33,7 @@ export async function createSnapshot(config: DbConfig): Promise<string> {
   }
 
   // Postgres and MySQL both emit SQL to stdout — stream it through the cipher
-  const ext = config.type === 'postgres' ? 'pg' : 'mysql';
+  const ext = config.supabase ? 'supabase' : config.type === 'postgres' ? 'pg' : 'mysql';
   const outFile = path.join(backupsDir, `${ext}_${ts}.sql.enc`);
   const { cmd, args, env } = getDumpCommand(config);
 
@@ -179,16 +179,18 @@ function getDumpCommand(config: DbConfig): { cmd: string; args: string[]; env: N
 
   if (config.type === 'postgres') {
     if (config.password) env.PGPASSWORD = config.password;
-    return {
-      cmd: 'pg_dump',
-      args: [
-        '-h', config.host || 'localhost',
-        '-p', String(config.port || 5432),
-        '-U', config.user || 'postgres',
-        config.database,
-      ],
-      env,
-    };
+    if (config.sslmode) env.PGSSLMODE = config.sslmode;
+    const args = [
+      '-h', config.host || 'localhost',
+      '-p', String(config.port || 5432),
+      '-U', config.user || 'postgres',
+    ];
+    // Supabase-specific: skip ownership/privileges that conflict with managed Postgres
+    if (config.supabase) {
+      args.push('--no-owner', '--no-privileges', '--no-subscriptions');
+    }
+    args.push(config.database);
+    return { cmd: 'pg_dump', args, env };
   }
 
   // mysql
@@ -208,6 +210,7 @@ function getRestoreCommand(config: DbConfig): { cmd: string; args: string[]; env
 
   if (config.type === 'postgres') {
     if (config.password) env.PGPASSWORD = config.password;
+    if (config.sslmode) env.PGSSLMODE = config.sslmode;
     return {
       cmd: 'psql',
       args: [
