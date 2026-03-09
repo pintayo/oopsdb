@@ -7,13 +7,17 @@ import { restoreCommand } from './commands/restore';
 import { statusCommand } from './commands/status';
 import { snapshotCommand } from './commands/snapshot';
 import { secureCommand } from './commands/secure';
+import { cleanCommand } from './commands/clean';
+
+// Read version from package.json at runtime
+const pkg = require('../package.json');
 
 const program = new Command();
 
 program
   .name('oopsdb')
   .description('Don\'t let AI nuke your database. Auto-backup and 1-click restore.')
-  .version('1.0.0');
+  .version(pkg.version);
 
 program
   .command('init')
@@ -50,10 +54,16 @@ program
   .option('--deactivate', 'Deactivate OopsDB Secure on this machine')
   .action(secureCommand);
 
+program
+  .command('clean')
+  .description('Remove all OopsDB data (.oopsdb/) from current project')
+  .option('--yes', 'Skip confirmation prompt')
+  .action(cleanCommand);
+
 program.parse(process.argv);
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
-  console.log('\n  \x1b[35mComing Soon:\x1b[0m \x1b[1moopsdb secure\x1b[0m — Immutable cloud backups that even a rogue AI can\'t delete.');
-  console.log('  \x1b[90mSign up at\x1b[0m \x1b[36mhttps://oopsdb.dev/secure\x1b[0m\n');
+  console.log('\n  \x1b[35mNew:\x1b[0m \x1b[1moopsdb secure\x1b[0m — Immutable cloud backups that even a rogue AI can\'t delete.');
+  console.log('  \x1b[90mLearn more:\x1b[0m \x1b[36mhttps://oopsdb.dev/secure\x1b[0m\n');
 }

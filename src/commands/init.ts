@@ -1,4 +1,6 @@
 import * as inquirer from 'inquirer';
+import * as fs from 'fs';
+import * as path from 'path';
 import chalk from 'chalk';
 import ora from 'ora';
 import { saveConfig, loadConfig, DbConfig, OopsConfig } from '../utils/config';
@@ -55,10 +57,15 @@ export async function initCommand(): Promise<void> {
         type: 'input',
         name: 'database',
         message: 'Path to your SQLite database file:',
-        validate: (input: string) => (input.length > 0 ? true : 'Please enter a path'),
+        validate: (input: string) => {
+          if (input.length === 0) return 'Please enter a path';
+          const resolved = path.resolve(input);
+          if (!fs.existsSync(resolved)) return `File not found: ${resolved}`;
+          return true;
+        },
       },
     ]);
-    dbConfig = { type: 'sqlite', database };
+    dbConfig = { type: 'sqlite', database: path.resolve(database) };
   } else {
     const answers = await inquirer.prompt([
       {
@@ -72,6 +79,11 @@ export async function initCommand(): Promise<void> {
         name: 'port',
         message: 'Database port:',
         default: dbType === 'postgres' ? '5432' : '3306',
+        validate: (input: string) => {
+          const port = parseInt(input, 10);
+          if (isNaN(port) || port < 1 || port > 65535) return 'Port must be a number between 1 and 65535';
+          return true;
+        },
       },
       {
         type: 'input',
@@ -137,8 +149,8 @@ export async function initCommand(): Promise<void> {
   console.log(chalk.cyan('    oopsdb status      ') + chalk.gray('See your backups'));
   console.log();
   console.log(chalk.gray('  ─────────────────────────────────────────────────'));
-  console.log(chalk.magenta('  Coming Soon: ') + chalk.white('oopsdb secure'));
+  console.log(chalk.magenta('  New: ') + chalk.white('oopsdb secure'));
   console.log(chalk.gray('  Immutable cloud backups that even a rogue AI can\'t delete.'));
-  console.log(chalk.gray('  Sign up at ') + chalk.cyan('https://oopsdb.dev/secure'));
+  console.log(chalk.gray('  Learn more: ') + chalk.cyan('oopsdb secure') + chalk.gray(' or ') + chalk.cyan('https://oopsdb.dev/secure'));
   console.log();
 }

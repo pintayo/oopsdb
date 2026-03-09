@@ -45,11 +45,21 @@ function decrypt(text: string): string {
 }
 
 export function ensureConfigDir(): void {
-  if (!fs.existsSync(CONFIG_DIR)) {
-    fs.mkdirSync(CONFIG_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(BACKUPS_DIR)) {
-    fs.mkdirSync(BACKUPS_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(CONFIG_DIR)) {
+      fs.mkdirSync(CONFIG_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(BACKUPS_DIR)) {
+      fs.mkdirSync(BACKUPS_DIR, { recursive: true });
+    }
+  } catch (err: any) {
+    if (err.code === 'EACCES') {
+      throw new Error(`Permission denied creating ${CONFIG_DIR}. Check directory permissions.`);
+    }
+    if (err.code === 'ENOSPC') {
+      throw new Error('Disk full. Free up space and try again.');
+    }
+    throw err;
   }
 }
 
