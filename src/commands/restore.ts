@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { loadConfig } from '../utils/config';
 import { listSnapshots, restoreSnapshot, createSnapshot } from '../utils/dumper';
+import { preflightCheck } from '../utils/preflight';
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -33,6 +34,14 @@ export async function restoreCommand(): Promise<void> {
 
   console.log(chalk.bold('\n  OopsDB Restore\n'));
   console.log(chalk.gray(`  Database: ${config.db.type} - ${config.db.database}\n`));
+
+  // Pre-flight: check that restore tool is available
+  const toolsOk = await preflightCheck(config.db.type, 'restore');
+  if (!toolsOk) {
+    console.log(chalk.red('\n  Missing required database tools. Install them and try again.\n'));
+    process.exit(1);
+  }
+  console.log();
 
   // Show the last 10 snapshots
   const recentSnapshots = snapshots.slice(0, 10);

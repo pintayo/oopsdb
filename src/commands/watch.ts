@@ -2,11 +2,20 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { loadConfig } from '../utils/config';
 import { createSnapshot, listSnapshots } from '../utils/dumper';
+import { preflightCheck } from '../utils/preflight';
 
 export async function watchCommand(options: { interval: string }): Promise<void> {
   const config = loadConfig();
   if (!config) {
     console.log(chalk.red('\n  No config found. Run `oopsdb init` first.\n'));
+    process.exit(1);
+  }
+
+  // Pre-flight: check that dump tool is available
+  console.log(chalk.gray('\n  Checking for required tools...\n'));
+  const toolsOk = await preflightCheck(config.db.type, 'dump');
+  if (!toolsOk) {
+    console.log(chalk.red('\n  Missing required database tools. Install them and try again.\n'));
     process.exit(1);
   }
 
