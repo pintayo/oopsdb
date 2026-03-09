@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OopsDB - Protect Your Database from AI Agents</title>
+    <meta name="description" content="Auto-backup and 1-click restore for developers using Claude Code, Cursor, Windsurf, and other AI coding agents.">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4f46e5', // Indigo-600
+                        primaryHover: '#4338ca', // Indigo-700
+                    },
+                    boxShadow: {
+                        'soft': '0 20px 40px -15px rgba(0,0,0,0.05)',
+                        'glow': '0 0 20px rgba(79, 70, 229, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        .hero-pattern {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-slate-50/80 backdrop-blur-md border-b border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-glow">
+                    <i data-feather="database" class="w-4 h-4"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight text-slate-900">OopsDB</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="#features" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">Features</a>
+                <a href="#how-it-works" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">How it Works</a>
+                <a href="https://github.com" target="_blank" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2">
+                    <i data-feather="github" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden hero-pattern">
+        <!-- Background decorative elements -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-indigo-500/20 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-6 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-sm font-medium text-slate-600 mb-8">
+                <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
+                For Claude Code, Cursor, Windsurf & more
+            </div>
+            
+            <h1 class="text-5xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-8">
+                Don't let AI nuke your <br class="hidden lg:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">database.</span>
+            </h1>
+            
+            <p class="text-lg lg:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                You're vibing. The AI decides the fastest way to fix a migration is <code class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-800 text-sm">DROP TABLE users</code>. Your data is gone. 
+                <br class="hidden sm:block">
+                <strong class="font-semibold text-slate-900">Auto-backup and 1-click restore</strong> so your afternoon survives the apocalypse.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button onclick="copyInstallCmd()" id="install-btn" class="group relative flex items-center justify-between w-full sm:w-auto px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-mono text-sm shadow-xl transition-all hover:-translate-y-0.5">
+                    <span class="flex items-center gap-3">
+                        <span class="text-slate-400">$</span>
+                        <span id="cmd-text">npm install -g oopsdb</span>
+                    </span>
+                    <i data-feather="copy" class="w-4 h-4 ml-6 text-slate-400 group-hover:text-white transition-colors"></i>
+                </button>
+                <a href="#how-it-works" class="flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl font-semibold shadow-sm transition-all hover:-translate-y-0.5">
+                    See How It Works
+                </a>
+            </div>
+            <p class="mt-4 text-xs text-slate-500 font-medium" id="copy-msg">Click to copy command</p>
+        </div>
+    </header>
+
+    <!-- CLI Demo Section -->
+    <section class="py-12 bg-white relative z-20 border-y border-slate-200/50">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800">
+                <div class="flex items-center px-4 py-3 bg-slate-800 border-b border-slate-700">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="mx-auto text-xs text-slate-400 font-mono">bash</div>
+                </div>
+                <div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto text-slate-300">
+                    <p><span class="text-green-400">➜</span>  <span class="text-blue-400">~</span> oopsdb init <span class="text-slate-500"># Connect your DB</span></p>
+                    <p class="text-slate-400 mt-2">✔ Connected to Supabase</p>
+                    <p class="text-slate-400">✔ Encrypted credentials saved</p>
+                    <p class="mt-4"><span class="text-green-400">➜</span>  <span class="text-blue-400">~</span> oopsdb watch <span class="text-slate-500"># Auto-backup every 5 mins</span></p>
+                    <p class="text-slate-400 mt-2">Watching database for changes...</p>
+                    <p class="text-slate-400">Snapshot created 12:00 PM (14MB)</p>
+                    <p class="text-slate-500 mt-4">... AI runs DELETE FROM orders ...</p>
+                    <p class="mt-4"><span class="text-green-400">➜</span>  <span class="text-blue-400">~</span> oopsdb restore <span class="text-slate-500"># Roll back instantly</span></p>
+                    <p class="text-slate-400 mt-2">✔ Safety snapshot taken</p>
+                    <p class="text-green-400">✔ Database restored successfully.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported DBs -->
+    <section class="py-12 bg-slate-50 border-b border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">Works natively with your stack</p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                <div class="flex items-center gap-2 text-xl font-bold"><img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" class="h-8" alt="Postgres"> PostgreSQL</div>
+                <div class="flex items-center gap-2 text-xl font-bold text-[#3ECF8E]"><div class="w-6 h-6 rounded-full bg-[#3ECF8E]"></div> Supabase</div>
+                <div class="flex items-center gap-2 text-xl font-bold"><img src="https://upload.wikimedia.org/wikipedia/en/6/62/MySQL.svg" class="h-8" alt="MySQL"> MySQL</div>
+                <div class="flex items-center gap-2 text-xl font-bold"><img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Sqlite-square-icon.svg" class="h-8" alt="SQLite"> SQLite</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Enterprise-grade safety, <br/> zero config required.</h2>
+                <p class="text-lg text-slate-600">Built exclusively to protect developer environments from accidental or AI-generated destructive operations.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6">
+                        <i data-feather="clock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Auto-Backups on a Timer</h3>
+                    <p class="text-slate-600 leading-relaxed">Run <code class="text-sm bg-slate-200 px-1 rounded text-slate-800">oopsdb watch</code> and forget it. Takes a snapshot every 5 minutes automatically.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6">
+                        <i data-feather="rotate-ccw"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Interactive Restore</h3>
+                    <p class="text-slate-600 leading-relaxed">Run <code class="text-sm bg-slate-200 px-1 rounded text-slate-800">oopsdb restore</code> to view your snapshots by timestamp and size. Pick one to rollback instantly.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-6">
+                        <i data-feather="shield"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Safety Snapshots</h3>
+                    <p class="text-slate-600 leading-relaxed">OopsDB automatically backs up your current state <em>before</em> restoring, so you can always undo your undo.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
+                        <i data-feather="lock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Encrypted at Rest</h3>
+                    <p class="text-slate-600 leading-relaxed">AES-256-CBC encryption on every backup file and locally stored credentials. Secure by default.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6">
+                        <i data-feather="cloud-off"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Zero Cloud, Local Only</h3>
+                    <p class="text-slate-600 leading-relaxed">Everything stays on your machine. No accounts, no data telemetry, no cloud dependencies.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-6">
+                        <i data-feather="cpu"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Streaming Backups</h3>
+                    <p class="text-slate-600 leading-relaxed">Output is streamed directly through encryption to disk. Near-zero memory footprint for massive databases.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supabase Callout -->
+    <section class="py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-[#3ECF8E]/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-sm font-medium text-[#3ECF8E] mb-6">
+                    <i data-feather="star" class="w-4 h-4"></i> First-Class Support
+                </div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Built for Supabase</h2>
+                <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                    OopsDB handles Supabase specifics automatically. Just paste your connection string. We auto-apply <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">--no-owner</code>, <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">--no-privileges</code>, and <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">sslmode=require</code> flags under the hood.
+                </p>
+                <ul class="space-y-4 text-slate-300">
+                    <li class="flex gap-3 items-start">
+                        <i data-feather="check-circle" class="w-6 h-6 text-[#3ECF8E] shrink-0"></i>
+                        <span>No complex pg_dump configurations required</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <i data-feather="check-circle" class="w-6 h-6 text-[#3ECF8E] shrink-0"></i>
+                        <span>Works seamlessly with remote hosted Postgres</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-slate-800/50 backdrop-blur border border-slate-700 p-8 rounded-3xl shadow-2xl">
+                <div class="font-mono text-sm space-y-4">
+                    <div class="flex gap-3">
+                        <span class="text-green-400">?</span>
+                        <span>Select database type:</span>
+                    </div>
+                    <div class="pl-6 text-[#3ECF8E] font-bold">> Supabase Postgres</div>
+                    <div class="pl-6 text-slate-500">  Local Postgres</div>
+                    <div class="pl-6 text-slate-500">  MySQL / MariaDB</div>
+                    <div class="pl-6 text-slate-500">  SQLite</div>
+                    
+                    <div class="flex gap-3 mt-6">
+                        <span class="text-green-400">?</span>
+                        <span>Paste connection string:</span>
+                    </div>
+                    <div class="pl-6 text-blue-300 break-all">[hidden for security]</div>
+                    
+                    <div class="mt-6 text-green-400 flex items-center gap-2">
+                        <i data-feather="check" class="w-4 h-4"></i> Configured securely.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Up-sell section: Secure Cloud -->
+    <section class="py-24 bg-white border-b border-slate-200/50">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="inline-block px-4 py-2 rounded-full bg-indigo-50 text-indigo-700 font-bold text-sm tracking-wide mb-6 border border-indigo-100">
+                COMING SOON
+            </div>
+            <h2 class="text-3xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+                OopsDB <span class="text-indigo-600">Secure</span>
+            </h2>
+            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+                Local backups are great until the AI decides to <code class="bg-slate-100 px-1.5 rounded">rm -rf .oopsdb/</code>. 
+                Secure pushes encrypted snapshots to tamper-proof, write-once cloud storage.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5">
+                    Request Early Access ($8/mo)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 py-12 border-t border-slate-200/50 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-center gap-2 mb-6 text-slate-400">
+                <i data-feather="database" class="w-5 h-5"></i>
+                <span class="font-bold text-xl tracking-tight text-slate-900">OopsDB</span>
+            </div>
+            <p class="text-slate-500 mb-6">Designed to keep your data safe from the AI apocalypse.</p>
+            <div class="flex justify-center gap-6 text-sm font-medium text-slate-500">
+                <a href="#" class="hover:text-slate-900 transition-colors">GitHub</a>
+                <a href="#" class="hover:text-slate-900 transition-colors">Documentation</a>
+                <a href="#" class="hover:text-slate-900 transition-colors">Twitter</a>
+            </div>
+            <p class="mt-8 text-xs text-slate-400">&copy; 2026 OopsDB. MIT License.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Init Feather Icons
+        feather.replace();
+
+        // Copy Install Command logic
+        function copyInstallCmd() {
+            const cmd = "npm install -g oopsdb";
+            navigator.clipboard.writeText(cmd).then(() => {
+                const btn = document.getElementById('install-btn');
+                const msg = document.getElementById('copy-msg');
+                const originalBg = btn.className;
+                
+                // Visual feedback
+                btn.classList.add('bg-green-600');
+                btn.classList.remove('bg-slate-900', 'hover:bg-slate-800');
+                msg.textContent = "Copied to clipboard!";
+                msg.classList.add('text-green-600');
+                msg.classList.remove('text-slate-500');
+
+                // Reset after 2s
+                setTimeout(() => {
+                    btn.classList.remove('bg-green-600');
+                    btn.classList.add('bg-slate-900', 'hover:bg-slate-800');
+                    msg.textContent = "Click to copy command";
+                    msg.classList.remove('text-green-600');
+                    msg.classList.add('text-slate-500');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
