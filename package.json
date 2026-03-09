@@ -33,7 +33,7 @@
     "type": "git",
     "url": "https://github.com/pintayo/BackupAsAService"
   },
-  "homepage": "https://oopsdb.dev",
+  "homepage": "https://oopsdb.com",
   "engines": {
     "node": ">=16.0.0"
   },

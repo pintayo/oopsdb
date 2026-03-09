@@ -34,7 +34,7 @@ async function pushSnapshot(tier: string): Promise<void> {
 
   if (tier !== 'secure') {
     console.log(chalk.yellow('  Cloud backups require the Secure plan ($19/mo).'));
-    console.log(chalk.gray('\n  Upgrade at ') + chalk.cyan('https://oopsdb.dev'));
+    console.log(chalk.gray('\n  Upgrade at ') + chalk.cyan('https://oopsdb.com'));
     console.log(chalk.gray('  Then run: ') + chalk.cyan('oopsdb activate <license-key>\n'));
     return;
   }
@@ -66,7 +66,7 @@ async function pushSnapshot(tier: string): Promise<void> {
   // TODO: Replace with real upload when backend is live
   // const license = loadLicense();
   // const fileStream = fs.createReadStream(latest.file);
-  // const res = await fetch(`https://api.oopsdb.dev/v1/snapshots`, {
+  // const res = await fetch(`https://api.oopsdb.com/v1/snapshots`, {
   //   method: 'POST',
   //   headers: {
   //     'Authorization': `Bearer ${license?.licenseKey}`,
@@ -89,7 +89,7 @@ function showSecureStatus(tier: string): void {
   if (tier !== 'secure') {
     console.log(chalk.yellow('  Plan: ') + chalk.white(tier === 'free' ? 'Free' : 'Pro'));
     console.log(chalk.gray('  Cloud backups require the Secure plan.'));
-    console.log(chalk.gray('\n  Upgrade at ') + chalk.cyan('https://oopsdb.dev\n'));
+    console.log(chalk.gray('\n  Upgrade at ') + chalk.cyan('https://oopsdb.com\n'));
     return;
   }
 
@@ -128,7 +128,7 @@ function showSecureInfo(tier: string): void {
   console.log(chalk.gray('  └─────────────────────────────────────────────────────────┘'));
   console.log();
   console.log(chalk.gray('  Get started:'));
-  console.log(chalk.cyan('    1. ') + chalk.white('Get Secure at ') + chalk.cyan('https://oopsdb.dev'));
+  console.log(chalk.cyan('    1. ') + chalk.white('Get Secure at ') + chalk.cyan('https://oopsdb.com'));
   console.log(chalk.cyan('    2. ') + chalk.white('oopsdb activate <your-license-key>'));
   console.log(chalk.cyan('    3. ') + chalk.white('oopsdb secure --push'));
   console.log();

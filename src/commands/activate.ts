@@ -8,7 +8,7 @@ export async function activateCommand(licenseKey: string): Promise<void> {
   if (!licenseKey || licenseKey.trim().length === 0) {
     console.log(chalk.red('  Please provide your license key.'));
     console.log(chalk.gray('\n  Usage: ') + chalk.cyan('oopsdb activate <license-key>'));
-    console.log(chalk.gray('  Get your key at ') + chalk.cyan('https://oopsdb.dev\n'));
+    console.log(chalk.gray('  Get your key at ') + chalk.cyan('https://oopsdb.com\n'));
     return;
   }
 
@@ -42,7 +42,7 @@ export async function activateCommand(licenseKey: string): Promise<void> {
     spinner.fail('Activation failed');
     console.log(chalk.red(`\n  ${err.message}`));
     console.log(chalk.gray('\n  Make sure your license key is correct.'));
-    console.log(chalk.gray('  Get help at ') + chalk.cyan('https://oopsdb.dev\n'));
+    console.log(chalk.gray('  Get help at ') + chalk.cyan('https://oopsdb.com\n'));
   }
 }
 
@@ -76,7 +76,7 @@ export async function licenseStatusCommand(): Promise<void> {
   if (!license) {
     console.log(chalk.gray('  Plan:   ') + chalk.white('Free'));
     console.log(chalk.gray('  Access: ') + chalk.white('SQLite only'));
-    console.log(chalk.gray('\n  Upgrade: ') + chalk.cyan('https://oopsdb.dev') + chalk.gray(' → then run ') + chalk.cyan('oopsdb activate <key>\n'));
+    console.log(chalk.gray('\n  Upgrade: ') + chalk.cyan('https://oopsdb.com') + chalk.gray(' → then run ') + chalk.cyan('oopsdb activate <key>\n'));
     return;
   }
 
