@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OopsDB - Protect Your Database from AI Agents</title>
-    <meta name="description" content="Auto-backup and 1-click restore for developers using Claude Code, Cursor, Windsurf, and other AI coding agents.">
-    
+    <meta name="description"
+        content="Auto-backup and 1-click restore for developers using Claude Code, Cursor, Windsurf, and other AI coding agents.">
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -32,10 +34,10 @@
             }
         }
     </script>
-    
+
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
-    
+
     <style>
         .hero-pattern {
             background-color: #f8fafc;
@@ -44,10 +46,12 @@
         }
     </style>
 </head>
+
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 transition-all duration-300 bg-slate-50/80 backdrop-blur-md border-b border-slate-200/50">
+    <nav
+        class="fixed w-full z-50 transition-all duration-300 bg-slate-50/80 backdrop-blur-md border-b border-slate-200/50">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-glow">
@@ -56,10 +60,15 @@
                 <span class="font-bold text-xl tracking-tight text-slate-900">OopsDB</span>
             </div>
             <div class="flex items-center gap-6">
-                <a href="#features" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">Features</a>
-                <a href="#how-it-works" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">How it Works</a>
-                <a href="#pricing" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">Pricing</a>
-                <a href="https://github.com/pintayo/BackupAsAService" target="_blank" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2">
+                <a href="#features"
+                    class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">Features</a>
+                <a href="#how-it-works"
+                    class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">How
+                    it Works</a>
+                <a href="#pricing"
+                    class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">Pricing</a>
+                <a href="https://github.com/pintayo/BackupAsAService" target="_blank"
+                    class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2">
                     <i data-feather="github" class="w-4 h-4"></i>
                     <span class="hidden sm:inline">GitHub</span>
                 </a>
@@ -70,34 +79,44 @@
     <!-- Hero Section -->
     <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden hero-pattern">
         <!-- Background decorative elements -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-indigo-500/20 blur-[120px] rounded-full pointer-events-none"></div>
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-indigo-500/20 blur-[120px] rounded-full pointer-events-none">
+        </div>
 
         <div class="max-w-5xl mx-auto px-6 relative z-10 text-center">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-sm font-medium text-slate-600 mb-8">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-sm font-medium text-slate-600 mb-8">
                 <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
                 For Claude Code, Cursor, Windsurf & more
             </div>
-            
+
             <h1 class="text-5xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-8">
                 Don't let AI nuke your <br class="hidden lg:block" />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">database.</span>
+                <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">database.</span>
             </h1>
-            
+
             <p class="text-lg lg:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-                You're vibing. The AI decides the fastest way to fix a migration is <code class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-800 text-sm">DROP TABLE users</code>. Your data is gone. 
+                You're vibing. The AI decides the fastest way to fix a migration is <code
+                    class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-800 text-sm">DROP TABLE users</code>. Your data
+                is gone.
                 <br class="hidden sm:block">
-                <strong class="font-semibold text-slate-900">Auto-backup and 1-click restore</strong> so your afternoon survives the apocalypse.
+                <strong class="font-semibold text-slate-900">Auto-backup and 1-click restore</strong> so your afternoon
+                survives the apocalypse.
             </p>
-            
+
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button onclick="copyInstallCmd()" id="install-btn" class="group relative flex items-center justify-between w-full sm:w-auto px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-mono text-sm shadow-xl transition-all hover:-translate-y-0.5">
+                <button onclick="copyInstallCmd()" id="install-btn"
+                    class="group relative flex items-center justify-between w-full sm:w-auto px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-mono text-sm shadow-xl transition-all hover:-translate-y-0.5">
                     <span class="flex items-center gap-3">
                         <span class="text-slate-400">$</span>
                         <span id="cmd-text">npm install -g oopsdb</span>
                     </span>
-                    <i data-feather="copy" class="w-4 h-4 ml-6 text-slate-400 group-hover:text-white transition-colors"></i>
+                    <i data-feather="copy"
+                        class="w-4 h-4 ml-6 text-slate-400 group-hover:text-white transition-colors"></i>
                 </button>
-                <a href="#how-it-works" class="flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl font-semibold shadow-sm transition-all hover:-translate-y-0.5">
+                <a href="#how-it-works"
+                    class="flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl font-semibold shadow-sm transition-all hover:-translate-y-0.5">
                     See How It Works
                 </a>
             </div>
@@ -118,14 +137,17 @@
                     <div class="mx-auto text-xs text-slate-400 font-mono">bash</div>
                 </div>
                 <div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto text-slate-300">
-                    <p><span class="text-green-400">➜</span>  <span class="text-blue-400">~</span> oopsdb init <span class="text-slate-500"># Connect your DB</span></p>
+                    <p><span class="text-green-400">➜</span> <span class="text-blue-400">~</span> oopsdb init <span
+                            class="text-slate-500"># Connect your DB</span></p>
                     <p class="text-slate-400 mt-2">✔ Connected to Supabase</p>
                     <p class="text-slate-400">✔ Encrypted credentials saved</p>
-                    <p class="mt-4"><span class="text-green-400">➜</span>  <span class="text-blue-400">~</span> oopsdb watch <span class="text-slate-500"># Auto-backup every 5 mins</span></p>
+                    <p class="mt-4"><span class="text-green-400">➜</span> <span class="text-blue-400">~</span> oopsdb
+                        watch <span class="text-slate-500"># Auto-backup every 5 mins</span></p>
                     <p class="text-slate-400 mt-2">Watching database for changes...</p>
                     <p class="text-slate-400">Snapshot created 12:00 PM (14MB)</p>
                     <p class="text-slate-500 mt-4">... AI runs DELETE FROM orders ...</p>
-                    <p class="mt-4"><span class="text-green-400">➜</span>  <span class="text-blue-400">~</span> oopsdb restore <span class="text-slate-500"># Roll back instantly</span></p>
+                    <p class="mt-4"><span class="text-green-400">➜</span> <span class="text-blue-400">~</span> oopsdb
+                        restore <span class="text-slate-500"># Roll back instantly</span></p>
                     <p class="text-slate-400 mt-2">✔ Safety snapshot taken</p>
                     <p class="text-green-400">✔ Database restored successfully.</p>
                 </div>
@@ -136,12 +158,22 @@
     <!-- Supported DBs -->
     <section class="py-12 bg-slate-50 border-b border-slate-200/50">
         <div class="max-w-7xl mx-auto px-6">
-            <p class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">Works natively with your stack</p>
-            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-                <div class="flex items-center gap-2 text-xl font-bold"><img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" class="h-8" alt="Postgres"> PostgreSQL</div>
-                <div class="flex items-center gap-2 text-xl font-bold text-[#3ECF8E]"><div class="w-6 h-6 rounded-full bg-[#3ECF8E]"></div> Supabase</div>
-                <div class="flex items-center gap-2 text-xl font-bold"><img src="https://upload.wikimedia.org/wikipedia/en/6/62/MySQL.svg" class="h-8" alt="MySQL"> MySQL</div>
-                <div class="flex items-center gap-2 text-xl font-bold"><img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Sqlite-square-icon.svg" class="h-8" alt="SQLite"> SQLite</div>
+            <p class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">Works natively
+                with your stack</p>
+            <div
+                class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                <div class="flex items-center gap-2 text-xl font-bold"><img
+                        src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" class="h-8"
+                        alt="Postgres"> PostgreSQL</div>
+                <div class="flex items-center gap-2 text-xl font-bold text-[#3ECF8E]">
+                    <div class="w-6 h-6 rounded-full bg-[#3ECF8E]"></div> Supabase
+                </div>
+                <div class="flex items-center gap-2 text-xl font-bold"><img
+                        src="https://upload.wikimedia.org/wikipedia/en/6/62/MySQL.svg" class="h-8" alt="MySQL"> MySQL
+                </div>
+                <div class="flex items-center gap-2 text-xl font-bold"><img
+                        src="https://upload.wikimedia.org/wikipedia/commons/9/97/Sqlite-square-icon.svg" class="h-8"
+                        alt="SQLite"> SQLite</div>
             </div>
         </div>
     </section>
@@ -150,63 +182,82 @@
     <section id="features" class="py-24 bg-white relative">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Enterprise-grade safety, <br/> zero config required.</h2>
-                <p class="text-lg text-slate-600">Built exclusively to protect developer environments from accidental or AI-generated destructive operations.</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Enterprise-grade safety, <br /> zero
+                    config required.</h2>
+                <p class="text-lg text-slate-600">Built exclusively to protect developer environments from accidental or
+                    AI-generated destructive operations.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6">
+                <div
+                    class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6">
                         <i data-feather="clock"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">Auto-Backups on a Timer</h3>
-                    <p class="text-slate-600 leading-relaxed">Run <code class="text-sm bg-slate-200 px-1 rounded text-slate-800">oopsdb watch</code> and forget it. Takes a snapshot every 5 minutes automatically.</p>
+                    <p class="text-slate-600 leading-relaxed">Run <code
+                            class="text-sm bg-slate-200 px-1 rounded text-slate-800">oopsdb watch</code> and forget it.
+                        Takes a snapshot every 5 minutes automatically.</p>
                 </div>
-                
+
                 <!-- Feature 2 -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6">
+                <div
+                    class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6">
                         <i data-feather="rotate-ccw"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">Interactive Restore</h3>
-                    <p class="text-slate-600 leading-relaxed">Run <code class="text-sm bg-slate-200 px-1 rounded text-slate-800">oopsdb restore</code> to view your snapshots by timestamp and size. Pick one to rollback instantly.</p>
+                    <p class="text-slate-600 leading-relaxed">Run <code
+                            class="text-sm bg-slate-200 px-1 rounded text-slate-800">oopsdb restore</code> to view your
+                        snapshots by timestamp and size. Pick one to rollback instantly.</p>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                <div
+                    class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
                     <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-6">
                         <i data-feather="shield"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">Safety Snapshots</h3>
-                    <p class="text-slate-600 leading-relaxed">OopsDB automatically backs up your current state <em>before</em> restoring, so you can always undo your undo.</p>
+                    <p class="text-slate-600 leading-relaxed">OopsDB automatically backs up your current state
+                        <em>before</em> restoring, so you can always undo your undo.</p>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
+                <div
+                    class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
                         <i data-feather="lock"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">Encrypted at Rest</h3>
-                    <p class="text-slate-600 leading-relaxed">AES-256-CBC encryption on every backup file and locally stored credentials. Secure by default.</p>
+                    <p class="text-slate-600 leading-relaxed">AES-256-CBC encryption on every backup file and locally
+                        stored credentials. Secure by default.</p>
                 </div>
 
                 <!-- Feature 5 -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                <div
+                    class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
                     <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6">
                         <i data-feather="cloud-off"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">Zero Cloud, Local Only</h3>
-                    <p class="text-slate-600 leading-relaxed">Everything stays on your machine. No accounts, no data telemetry, no cloud dependencies.</p>
+                    <p class="text-slate-600 leading-relaxed">Everything stays on your machine. No accounts, no data
+                        telemetry, no cloud dependencies.</p>
                 </div>
 
                 <!-- Feature 6 -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
+                <div
+                    class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-soft hover:shadow-lg transition-shadow">
                     <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-6">
                         <i data-feather="cpu"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-3">Streaming Backups</h3>
-                    <p class="text-slate-600 leading-relaxed">Output is streamed directly through encryption to disk. Near-zero memory footprint for massive databases.</p>
+                    <p class="text-slate-600 leading-relaxed">Output is streamed directly through encryption to disk.
+                        Near-zero memory footprint for massive databases.</p>
                 </div>
             </div>
         </div>
@@ -214,15 +265,21 @@
 
     <!-- Supabase Callout -->
     <section class="py-24 bg-slate-900 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-[#3ECF8E]/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div
+            class="absolute top-0 right-0 w-[600px] h-[600px] bg-[#3ECF8E]/10 blur-[100px] rounded-full pointer-events-none">
+        </div>
         <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
             <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-sm font-medium text-[#3ECF8E] mb-6">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-sm font-medium text-[#3ECF8E] mb-6">
                     <i data-feather="star" class="w-4 h-4"></i> First-Class Support
                 </div>
                 <h2 class="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Built for Supabase</h2>
                 <p class="text-slate-400 text-lg mb-8 leading-relaxed">
-                    OopsDB handles Supabase specifics automatically. Just paste your connection string. We auto-apply <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">--no-owner</code>, <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">--no-privileges</code>, and <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">sslmode=require</code> flags under the hood.
+                    OopsDB handles Supabase specifics automatically. Just paste your connection string. We auto-apply
+                    <code class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">--no-owner</code>, <code
+                        class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">--no-privileges</code>, and <code
+                        class="bg-slate-800 px-1.5 py-0.5 rounded text-sm">sslmode=require</code> flags under the hood.
                 </p>
                 <ul class="space-y-4 text-slate-300">
                     <li class="flex gap-3 items-start">
@@ -242,16 +299,16 @@
                         <span>Select database type:</span>
                     </div>
                     <div class="pl-6 text-[#3ECF8E] font-bold">> Supabase Postgres</div>
-                    <div class="pl-6 text-slate-500">  Local Postgres</div>
-                    <div class="pl-6 text-slate-500">  MySQL / MariaDB</div>
-                    <div class="pl-6 text-slate-500">  SQLite</div>
-                    
+                    <div class="pl-6 text-slate-500"> Local Postgres</div>
+                    <div class="pl-6 text-slate-500"> MySQL / MariaDB</div>
+                    <div class="pl-6 text-slate-500"> SQLite</div>
+
                     <div class="flex gap-3 mt-6">
                         <span class="text-green-400">?</span>
                         <span>Paste connection string:</span>
                     </div>
                     <div class="pl-6 text-blue-300 break-all">[hidden for security]</div>
-                    
+
                     <div class="mt-6 text-green-400 flex items-center gap-2">
                         <i data-feather="check" class="w-4 h-4"></i> Configured securely.
                     </div>
@@ -264,7 +321,8 @@
     <section id="pricing" class="py-24 bg-white border-b border-slate-200/50">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Simple pricing. <br/>Start free, upgrade when you need it.</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Simple pricing. <br />Start free, upgrade
+                    when you need it.</h2>
                 <p class="text-lg text-slate-600">Free covers SQLite. Go Pro for full database support.</p>
             </div>
 
@@ -277,13 +335,19 @@
                         <span class="text-4xl font-extrabold text-slate-900">$0</span>
                         <span class="text-slate-500">/forever</span>
                     </div>
-                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Local database backups for SQLite. Perfect for solo projects and vibe coding.</p>
+                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Local database backups for SQLite. Perfect
+                        for solo projects and vibe coding.</p>
                     <ul class="space-y-3 mb-8 text-sm text-slate-700 flex-1">
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> SQLite backups</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Auto-backup on timer</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Interactive restore</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Encrypted at rest</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> 10 snapshots</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> SQLite backups</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Auto-backup on timer</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Interactive restore</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Encrypted at rest</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> 10 snapshots</li>
                     </ul>
                     <div class="bg-slate-900 text-white text-center py-3 rounded-xl font-mono text-sm">
                         npm i -g oopsdb
@@ -291,24 +355,34 @@
                 </div>
 
                 <!-- Pro -->
-                <div class="bg-white rounded-2xl p-8 border-2 border-indigo-600 shadow-xl ring-1 ring-indigo-600/10 flex flex-col relative">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">Most Popular</div>
+                <div
+                    class="bg-white rounded-2xl p-8 border-2 border-indigo-600 shadow-xl ring-1 ring-indigo-600/10 flex flex-col relative">
+                    <div
+                        class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
+                        Most Popular</div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Pro</h3>
                     <div class="mb-6">
                         <span class="text-4xl font-extrabold text-slate-900">$9</span>
                         <span class="text-slate-500">/mo</span>
                     </div>
-                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Full database protection. PostgreSQL, MySQL, Supabase, and SQLite. Unlimited snapshots.</p>
+                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Full database protection. PostgreSQL, MySQL,
+                        Supabase, and SQLite. Unlimited snapshots.</p>
                     <ul class="space-y-3 mb-8 text-sm text-slate-700 flex-1">
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Everything in Free</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> PostgreSQL support</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> MySQL / MariaDB support</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Supabase support</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Unlimited snapshots</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Priority support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Everything in Free</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> PostgreSQL support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> MySQL / MariaDB support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Supabase support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Unlimited snapshots</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Priority support</li>
                     </ul>
-                    <!-- REPLACE with your LemonSqueezy checkout link -->
-                    <a href="https://oopsdb.lemonsqueezy.com/buy/YOUR_PRO_VARIANT_ID" class="block text-center py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200">
+                    <a href="https://oopsdb.lemonsqueezy.com/buy/1384887"
+                        class="block text-center py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200">
                         Get Pro
                     </a>
                 </div>
@@ -320,17 +394,24 @@
                         <span class="text-4xl font-extrabold text-slate-900">$19</span>
                         <span class="text-slate-500">/mo</span>
                     </div>
-                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Everything in Pro plus immutable cloud backups. Tamper-proof, write-once retention.</p>
+                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Everything in Pro plus immutable cloud
+                        backups. Tamper-proof, write-once retention.</p>
                     <ul class="space-y-3 mb-8 text-sm text-slate-700 flex-1">
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Everything in Pro</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Immutable cloud storage</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Write-once retention</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> 30-day cloud history</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Team sharing</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check" class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Slack / Discord alerts</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Everything in Pro</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Immutable cloud storage</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Write-once retention</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> 30-day cloud history</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Team sharing</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Slack / Discord alerts</li>
                     </ul>
-                    <!-- REPLACE with your LemonSqueezy checkout link -->
-                    <a href="https://oopsdb.lemonsqueezy.com/buy/YOUR_SECURE_VARIANT_ID" class="block text-center py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold transition-all hover:-translate-y-0.5">
+                    <a href="https://oopsdb.lemonsqueezy.com/buy/1384890"
+                        class="block text-center py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold transition-all hover:-translate-y-0.5">
                         Get Secure
                     </a>
                 </div>
@@ -348,7 +429,8 @@
             </div>
             <p class="text-slate-500 mb-6">Designed to keep your data safe from the AI apocalypse.</p>
             <div class="flex justify-center gap-6 text-sm font-medium text-slate-500">
-                <a href="https://github.com/pintayo/BackupAsAService" class="hover:text-slate-900 transition-colors">GitHub</a>
+                <a href="https://github.com/pintayo/BackupAsAService"
+                    class="hover:text-slate-900 transition-colors">GitHub</a>
                 <a href="https://www.npmjs.com/package/oopsdb" class="hover:text-slate-900 transition-colors">npm</a>
                 <a href="#pricing" class="hover:text-slate-900 transition-colors">Pricing</a>
             </div>
@@ -367,7 +449,7 @@
                 const btn = document.getElementById('install-btn');
                 const msg = document.getElementById('copy-msg');
                 const originalBg = btn.className;
-                
+
                 // Visual feedback
                 btn.classList.add('bg-green-600');
                 btn.classList.remove('bg-slate-900', 'hover:bg-slate-800');
@@ -387,4 +469,5 @@
         }
     </script>
 </body>
+
 </html>
