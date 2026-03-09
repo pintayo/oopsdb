@@ -80,3 +80,7 @@ export function getBackupsDir(): string {
 export function getConfigDir(): string {
   return CONFIG_DIR;
 }
+
+export function getEncryptionKey(): Buffer {
+  return ENCRYPTION_KEY;
+}
