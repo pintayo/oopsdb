@@ -103,6 +103,11 @@ Local backups are great until the AI decides to `rm -rf .oopsdb/`. `oopsdb secur
 
 Sign up for early access at [oopsdb.com/secure](https://oopsdb.com/secure).
 
+## Support
+
+If OopsDB saved your database (and your afternoon), consider buying me a coffee! ☕
+[ko-fi.com/pintayo](https://ko-fi.com/pintayo)
+
 ## License
 
 MIT
