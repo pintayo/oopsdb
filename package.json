@@ -31,7 +31,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pintayo/oopsdb"
+    "url": "git+https://github.com/pintayo/oopsdb.git"
   },
   "homepage": "https://oopsdb.com",
   "engines": {
