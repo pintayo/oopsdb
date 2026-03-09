@@ -33,16 +33,20 @@ export async function initCommand(): Promise<void> {
       name: 'dbType',
       message: 'What database are you using?',
       choices: [
-        { name: 'PostgreSQL (Supabase, Neon, local)', value: 'postgres' },
+        { name: 'Supabase', value: 'supabase' },
+        { name: 'PostgreSQL (Neon, local, other hosted)', value: 'postgres' },
         { name: 'MySQL / MariaDB', value: 'mysql' },
         { name: 'SQLite (local file)', value: 'sqlite' },
       ],
     },
   ]);
 
+  // Supabase and plain Postgres both use pg_dump/psql
+  const toolType = dbType === 'supabase' ? 'postgres' : dbType;
+
   // Pre-flight: check that the required DB tools are installed
   console.log(chalk.gray('\n  Checking for required tools...\n'));
-  const toolsOk = await preflightCheck(dbType, 'both');
+  const toolsOk = await preflightCheck(toolType, 'both');
   if (!toolsOk) {
     console.log(chalk.red('\n  Missing required database tools. Install them and re-run `oopsdb init`.\n'));
     process.exit(1);
@@ -51,7 +55,9 @@ export async function initCommand(): Promise<void> {
 
   let dbConfig: DbConfig;
 
-  if (dbType === 'sqlite') {
+  if (dbType === 'supabase') {
+    dbConfig = await setupSupabase();
+  } else if (dbType === 'sqlite') {
     const { database } = await inquirer.prompt([
       {
         type: 'input',
@@ -153,4 +159,121 @@ export async function initCommand(): Promise<void> {
   console.log(chalk.gray('  Immutable cloud backups that even a rogue AI can\'t delete.'));
   console.log(chalk.gray('  Learn more: ') + chalk.cyan('oopsdb secure') + chalk.gray(' or ') + chalk.cyan('https://oopsdb.dev/secure'));
   console.log();
+}
+
+/**
+ * Parse a Supabase/Postgres connection string into DbConfig components.
+ * Supports: postgresql://user:password@host:port/database?sslmode=require
+ */
+function parseConnectionString(connStr: string): DbConfig {
+  const url = new URL(connStr);
+  return {
+    type: 'postgres',
+    supabase: true,
+    host: url.hostname,
+    port: parseInt(url.port, 10) || 5432,
+    user: decodeURIComponent(url.username),
+    password: decodeURIComponent(url.password),
+    database: url.pathname.slice(1) || 'postgres',
+    connectionString: connStr,
+    sslmode: url.searchParams.get('sslmode') || 'require',
+  };
+}
+
+async function setupSupabase(): Promise<DbConfig> {
+  console.log(chalk.cyan('  Supabase Setup'));
+  console.log(chalk.gray('  Find your connection string in Supabase Dashboard → Settings → Database\n'));
+
+  const { method } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'method',
+      message: 'How do you want to connect?',
+      choices: [
+        { name: 'Paste connection string (recommended)', value: 'connstring' },
+        { name: 'Enter details manually', value: 'manual' },
+      ],
+    },
+  ]);
+
+  if (method === 'connstring') {
+    const { connString } = await inquirer.prompt([
+      {
+        type: 'password',
+        name: 'connString',
+        message: 'Paste your Supabase connection string:',
+        validate: (input: string) => {
+          if (!input.startsWith('postgresql://') && !input.startsWith('postgres://')) {
+            return 'Connection string must start with postgresql:// or postgres://';
+          }
+          try {
+            new URL(input);
+            return true;
+          } catch {
+            return 'Invalid connection string format';
+          }
+        },
+      },
+    ]);
+
+    const config = parseConnectionString(connString);
+
+    console.log(chalk.gray(`\n  Parsed: ${config.host}:${config.port}/${config.database} (user: ${config.user})`));
+    console.log(chalk.gray(`  SSL: ${config.sslmode}`));
+    console.log(chalk.green('  Supabase-specific flags: --no-owner --no-privileges --no-subscriptions\n'));
+
+    return config;
+  }
+
+  // Manual entry
+  const answers = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'host',
+      message: 'Supabase database host:',
+      default: 'db.YOUR_PROJECT_REF.supabase.co',
+      validate: (input: string) => input.length > 0 ? true : 'Please enter a host',
+    },
+    {
+      type: 'input',
+      name: 'port',
+      message: 'Port:',
+      default: '5432',
+      validate: (input: string) => {
+        const port = parseInt(input, 10);
+        if (isNaN(port) || port < 1 || port > 65535) return 'Port must be 1-65535';
+        return true;
+      },
+    },
+    {
+      type: 'input',
+      name: 'user',
+      message: 'Database user:',
+      default: 'postgres',
+    },
+    {
+      type: 'password',
+      name: 'password',
+      message: 'Database password:',
+    },
+    {
+      type: 'input',
+      name: 'database',
+      message: 'Database name:',
+      default: 'postgres',
+    },
+  ]);
+
+  console.log(chalk.green('\n  Supabase-specific flags will be applied automatically.\n'));
+
+  return {
+    type: 'postgres',
+    supabase: true,
+    host: answers.host,
+    port: parseInt(answers.port, 10),
+    user: answers.user,
+    password: answers.password,
+    database: answers.database,
+    sslmode: 'require',
+  };
 }

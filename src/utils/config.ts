@@ -20,6 +20,10 @@ export interface DbConfig {
   password?: string;
   database: string;
   connectionString?: string;
+  /** When true, uses Supabase-specific pg_dump flags (--no-owner, --no-privileges, --no-subscriptions) */
+  supabase?: boolean;
+  /** SSL mode for Postgres connections (e.g., 'require', 'verify-full') */
+  sslmode?: string;
 }
 
 export interface OopsConfig {

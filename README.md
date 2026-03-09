@@ -16,7 +16,7 @@ Your data is gone. Your afternoon is gone. Your will to live is negotiable.
 
 ```bash
 npm install -g oopsdb
-oopsdb init      # connect your DB (Postgres, MySQL, SQLite)
+oopsdb init      # connect your DB (Supabase, Postgres, MySQL, SQLite)
 oopsdb watch     # auto-backup every 5 min
 # ... AI nukes your DB ...
 oopsdb restore   # pick a snapshot, roll back instantly
@@ -38,9 +38,23 @@ That's it. Three commands. Your data survives the AI apocalypse.
 
 | Database | Backup Tool | Restore Tool |
 |----------|------------|--------------|
-| PostgreSQL (Supabase, Neon, local) | `pg_dump` | `psql` |
+| **Supabase** | `pg_dump` (with Supabase flags) | `psql` |
+| PostgreSQL (Neon, local, other hosted) | `pg_dump` | `psql` |
 | MySQL / MariaDB | `mysqldump` | `mysql` |
 | SQLite | `sqlite3` | `sqlite3` |
+
+### Supabase (first-class support)
+
+OopsDB has dedicated Supabase support. Just paste your connection string:
+
+```bash
+oopsdb init
+# → Select "Supabase"
+# → Paste your connection string from Supabase Dashboard → Settings → Database
+# → Done. SSL and Supabase-specific pg_dump flags are handled automatically.
+```
+
+Supabase-specific flags applied automatically: `--no-owner`, `--no-privileges`, `--no-subscriptions`, `sslmode=require`.
 
 ## Commands
 
@@ -51,7 +65,8 @@ oopsdb watch -i 1          Auto-backup every 1 minute (paranoid mode)
 oopsdb snapshot            One-time manual backup
 oopsdb restore             Interactive restore from any snapshot
 oopsdb status              View backup history and stats
-oopsdb secure              [Coming Soon] Immutable cloud backups
+oopsdb secure              Immutable cloud backups ($8/mo)
+oopsdb clean               Remove all OopsDB data from project
 ```
 
 ## How It Works

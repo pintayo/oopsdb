@@ -229,9 +229,6 @@ describe('CLI version and help', () => {
 
 describe('Dump command building', () => {
   it('postgres dump command uses PGPASSWORD env var (no password in args)', () => {
-    // Verify that getDumpCommand doesn't leak password into command args
-    // by checking the built dist module exports
-    // We test this indirectly: the password should be in env, not in args
     const config = {
       type: 'postgres' as const,
       host: 'localhost',
@@ -257,5 +254,74 @@ describe('Dump command building', () => {
       process.chdir(origCwd2);
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
+  });
+});
+
+// ─── Supabase config ─────────────────────────────────────────────────────────
+
+describe('Supabase config', () => {
+  beforeEach(() => {
+    origCwd = process.cwd();
+    workDir = makeTempDir();
+    process.chdir(workDir);
+  });
+
+  afterEach(() => {
+    process.chdir(origCwd);
+    fs.rmSync(workDir, { recursive: true, force: true });
+  });
+
+  it('saves and loads supabase flag correctly', () => {
+    const { saveConfig, loadConfig } = freshImport<typeof import('../dist/utils/config')>('../dist/utils/config');
+
+    const config = {
+      db: {
+        type: 'postgres' as const,
+        supabase: true,
+        host: 'db.abcdefg.supabase.co',
+        port: 5432,
+        user: 'postgres',
+        password: 'my-supabase-pass',
+        database: 'postgres',
+        sslmode: 'require',
+      },
+      createdAt: new Date().toISOString(),
+    };
+
+    saveConfig(config);
+    const loaded = loadConfig();
+    expect(loaded).not.toBeNull();
+    expect(loaded!.db.supabase).toBe(true);
+    expect(loaded!.db.sslmode).toBe('require');
+    expect(loaded!.db.host).toBe('db.abcdefg.supabase.co');
+  });
+
+  it('saves connection string with special characters in password', () => {
+    const { saveConfig, loadConfig } = freshImport<typeof import('../dist/utils/config')>('../dist/utils/config');
+
+    const config = {
+      db: {
+        type: 'postgres' as const,
+        supabase: true,
+        host: 'aws-0-us-east-1.pooler.supabase.com',
+        port: 5432,
+        user: 'postgres.abcdefg',
+        password: 'p@ss!w0rd#$%',
+        database: 'postgres',
+        connectionString: 'postgresql://postgres.abcdefg:p%40ss!w0rd%23%24%25@aws-0-us-east-1.pooler.supabase.com:5432/postgres?sslmode=require',
+        sslmode: 'require',
+      },
+      createdAt: new Date().toISOString(),
+    };
+
+    saveConfig(config);
+    const loaded = loadConfig();
+    expect(loaded!.db.password).toBe('p@ss!w0rd#$%');
+    expect(loaded!.db.connectionString).toContain('pooler.supabase.com');
+
+    // Verify encrypted on disk
+    const raw = fs.readFileSync(path.join(workDir, '.oopsdb', 'config.json'), 'utf8');
+    expect(raw).not.toContain('supabase');
+    expect(raw).not.toContain('password');
   });
 });
