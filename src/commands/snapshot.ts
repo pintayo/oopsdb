@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { loadConfig } from '../utils/config';
 import { createSnapshot } from '../utils/dumper';
+import { preflightCheck } from '../utils/preflight';
 import * as fs from 'fs';
 
 export async function snapshotCommand(): Promise<void> {
@@ -13,6 +14,14 @@ export async function snapshotCommand(): Promise<void> {
 
   console.log(chalk.bold('\n  OopsDB Manual Snapshot\n'));
   console.log(chalk.gray(`  Database: ${config.db.type} - ${config.db.database}\n`));
+
+  // Pre-flight: check that dump tool is available
+  const toolsOk = await preflightCheck(config.db.type, 'dump');
+  if (!toolsOk) {
+    console.log(chalk.red('\n  Missing required database tools. Install them and try again.\n'));
+    process.exit(1);
+  }
+  console.log();
 
   const spinner = ora('Taking snapshot...').start();
   try {

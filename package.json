@@ -26,6 +26,19 @@
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pintayo/BackupAsAService"
+  },
+  "homepage": "https://oopsdb.dev",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^12.1.0",

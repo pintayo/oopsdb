@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { saveConfig, loadConfig, DbConfig, OopsConfig } from '../utils/config';
 import { createSnapshot } from '../utils/dumper';
+import { preflightCheck } from '../utils/preflight';
 
 export async function initCommand(): Promise<void> {
   console.log(chalk.bold('\n  OopsDB Setup\n'));
@@ -36,6 +37,15 @@ export async function initCommand(): Promise<void> {
       ],
     },
   ]);
+
+  // Pre-flight: check that the required DB tools are installed
+  console.log(chalk.gray('\n  Checking for required tools...\n'));
+  const toolsOk = await preflightCheck(dbType, 'both');
+  if (!toolsOk) {
+    console.log(chalk.red('\n  Missing required database tools. Install them and re-run `oopsdb init`.\n'));
+    process.exit(1);
+  }
+  console.log();
 
   let dbConfig: DbConfig;
 
@@ -125,5 +135,10 @@ export async function initCommand(): Promise<void> {
   console.log(chalk.cyan('    oopsdb snapshot    ') + chalk.gray('Take a manual snapshot'));
   console.log(chalk.cyan('    oopsdb restore     ') + chalk.gray('Roll back to a backup'));
   console.log(chalk.cyan('    oopsdb status      ') + chalk.gray('See your backups'));
+  console.log();
+  console.log(chalk.gray('  ─────────────────────────────────────────────────'));
+  console.log(chalk.magenta('  Coming Soon: ') + chalk.white('oopsdb secure'));
+  console.log(chalk.gray('  Immutable cloud backups that even a rogue AI can\'t delete.'));
+  console.log(chalk.gray('  Sign up at ') + chalk.cyan('https://oopsdb.dev/secure'));
   console.log();
 }
