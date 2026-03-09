@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npx vitest run tests/unit.test.ts
+      - run: npm run test
 
   e2e-tests:
     runs-on: ubuntu-latest
