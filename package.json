@@ -1,0 +1,40 @@
+{
+  "name": "oopsdb",
+  "version": "1.0.0",
+  "description": "Don't let AI nuke your database. Auto-backup and 1-click restore for developers using Claude Code, OpenClaw, and other AI coding agents.",
+  "main": "dist/index.js",
+  "bin": {
+    "oopsdb": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "database",
+    "backup",
+    "restore",
+    "rollback",
+    "claude-code",
+    "ai-safety",
+    "mysql",
+    "postgres",
+    "supabase",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^12.1.0",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.10",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
