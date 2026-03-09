@@ -6,6 +6,7 @@ import ora from 'ora';
 import { saveConfig, loadConfig, DbConfig, OopsConfig } from '../utils/config';
 import { createSnapshot } from '../utils/dumper';
 import { preflightCheck } from '../utils/preflight';
+import { getCurrentTier, requiresLicense } from '../utils/license';
 
 export async function initCommand(): Promise<void> {
   console.log(chalk.bold('\n  OopsDB Setup\n'));
@@ -40,6 +41,20 @@ export async function initCommand(): Promise<void> {
       ],
     },
   ]);
+
+  // Check license for non-SQLite databases
+  if (requiresLicense(dbType)) {
+    const tier = getCurrentTier();
+    if (tier === 'free') {
+      console.log(chalk.yellow('\n  ⚠  ' + dbType.charAt(0).toUpperCase() + dbType.slice(1) + ' requires a Pro or Secure license.\n'));
+      console.log(chalk.white('  Free plan supports SQLite only.'));
+      console.log(chalk.gray('\n  To upgrade:'));
+      console.log(chalk.cyan('    1. ') + chalk.white('Get a license at ') + chalk.cyan('https://oopsdb.dev'));
+      console.log(chalk.cyan('    2. ') + chalk.white('Run: ') + chalk.cyan('oopsdb activate <your-license-key>'));
+      console.log(chalk.cyan('    3. ') + chalk.white('Run: ') + chalk.cyan('oopsdb init') + chalk.gray(' again\n'));
+      return;
+    }
+  }
 
   // Supabase and plain Postgres both use pg_dump/psql
   const toolType = dbType === 'supabase' ? 'postgres' : dbType;

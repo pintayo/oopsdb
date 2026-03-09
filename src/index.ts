@@ -8,6 +8,7 @@ import { statusCommand } from './commands/status';
 import { snapshotCommand } from './commands/snapshot';
 import { secureCommand } from './commands/secure';
 import { cleanCommand } from './commands/clean';
+import { activateCommand, deactivateCommand, licenseStatusCommand } from './commands/activate';
 
 // Read version from package.json at runtime
 const pkg = require('../package.json');
@@ -48,11 +49,24 @@ program
 program
   .command('secure')
   .description('Immutable cloud backups — tamper-proof, AI-proof')
-  .option('--activate <api-key>', 'Activate with your API key from oopsdb.dev/secure')
   .option('--push', 'Push latest snapshot to immutable cloud storage')
   .option('--status', 'Show Secure activation status')
-  .option('--deactivate', 'Deactivate OopsDB Secure on this machine')
   .action(secureCommand);
+
+program
+  .command('activate <license-key>')
+  .description('Activate a Pro or Secure license key')
+  .action(activateCommand);
+
+program
+  .command('deactivate')
+  .description('Deactivate your license on this machine')
+  .action(deactivateCommand);
+
+program
+  .command('license')
+  .description('Show current license status and plan')
+  .action(licenseStatusCommand);
 
 program
   .command('clean')
