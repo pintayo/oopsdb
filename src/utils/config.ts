@@ -2,9 +2,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
-const CONFIG_DIR = path.join(process.cwd(), '.oopsdb');
-const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
-const BACKUPS_DIR = path.join(CONFIG_DIR, 'backups');
+function getConfigDirPath(): string {
+  return path.join(process.cwd(), '.oopsdb');
+}
+function getConfigFilePath(): string {
+  return path.join(getConfigDirPath(), 'config.json');
+}
+function getBackupsDirPath(): string {
+  return path.join(getConfigDirPath(), 'backups');
+}
 
 // We no longer use a deterministic machine key because it binds the user to a specific machine.
 // Instead, we will generate a secure random 256-bit MASTER_KEY upon initialization.
@@ -56,15 +62,15 @@ function decryptConfig(text: string): string {
 
 export function ensureConfigDir(): void {
   try {
-    if (!fs.existsSync(CONFIG_DIR)) {
-      fs.mkdirSync(CONFIG_DIR, { recursive: true });
+    if (!fs.existsSync(getConfigDirPath())) {
+      fs.mkdirSync(getConfigDirPath(), { recursive: true });
     }
-    if (!fs.existsSync(BACKUPS_DIR)) {
-      fs.mkdirSync(BACKUPS_DIR, { recursive: true });
+    if (!fs.existsSync(getBackupsDirPath())) {
+      fs.mkdirSync(getBackupsDirPath(), { recursive: true });
     }
   } catch (err: any) {
     if (err.code === 'EACCES') {
-      throw new Error(`Permission denied creating ${CONFIG_DIR}. Check directory permissions.`);
+      throw new Error(`Permission denied creating ${getConfigDirPath()}. Check directory permissions.`);
     }
     if (err.code === 'ENOSPC') {
       throw new Error('Disk full. Free up space and try again.');
@@ -76,15 +82,15 @@ export function ensureConfigDir(): void {
 export function saveConfig(config: OopsConfig): void {
   ensureConfigDir();
   const encrypted = encryptConfig(JSON.stringify(config));
-  fs.writeFileSync(CONFIG_FILE, encrypted, 'utf8');
+  fs.writeFileSync(getConfigFilePath(), encrypted, 'utf8');
 }
 
 export function loadConfig(): OopsConfig | null {
-  if (!fs.existsSync(CONFIG_FILE)) {
+  if (!fs.existsSync(getConfigFilePath())) {
     return null;
   }
   try {
-    const encrypted = fs.readFileSync(CONFIG_FILE, 'utf8');
+    const encrypted = fs.readFileSync(getConfigFilePath(), 'utf8');
     const decrypted = decryptConfig(encrypted);
     return JSON.parse(decrypted);
   } catch {
@@ -94,11 +100,11 @@ export function loadConfig(): OopsConfig | null {
 
 export function getBackupsDir(): string {
   ensureConfigDir();
-  return BACKUPS_DIR;
+  return getBackupsDirPath();
 }
 
 export function getConfigDir(): string {
-  return CONFIG_DIR;
+  return getConfigDirPath();
 }
 
 export function generateMasterKey(): string {

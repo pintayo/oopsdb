@@ -48,14 +48,16 @@ function writeConfig(
   fs.mkdirSync(configDir, { recursive: true });
   fs.mkdirSync(backupsDir, { recursive: true });
 
-  const encKey = crypto
+  const machineKey = crypto
     .createHash('sha256')
-    .update(`oopsdb-${process.env.USER || 'default'}-${os.hostname()}`)
+    .update(`oopsdb-config-${process.env.USER || 'default'}-${os.hostname()}`)
     .digest();
 
-  const config = { db: dbConfig, createdAt: new Date().toISOString() };
+  const masterKey = crypto.randomBytes(32).toString('hex');
+
+  const config = { db: dbConfig, createdAt: new Date().toISOString(), masterKey };
   const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv('aes-256-cbc', encKey, iv);
+  const cipher = crypto.createCipheriv('aes-256-cbc', machineKey, iv);
   let encrypted = cipher.update(JSON.stringify(config), 'utf8', 'hex');
   encrypted += cipher.final('hex');
 
