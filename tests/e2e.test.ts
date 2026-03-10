@@ -195,7 +195,7 @@ describe('PostgreSQL E2E', () => {
 
       // Verify the table is gone
       expect(() =>
-        runSQL(`${psqlCmd} -d ${DB}`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv)
+        runSQL(`${psqlCmd} -d ${DB} -t -A`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv)
       ).toThrow();
 
       // Restore
@@ -250,7 +250,7 @@ describe('PostgreSQL E2E', () => {
       }
       expect(dropError).not.toBeNull();
       // Ensure the table is still there
-      const count = runSQL(`${psqlCmd} -d ${DB}`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv);
+      const count = runSQL(`${psqlCmd} -d ${DB} -t -A`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv);
       expect(parseInt(count, 10)).toBe(3);
 
       // 3. To unlock without hanging the test on the 60s setInterval, we'll manually execute the unlock SQL
@@ -259,7 +259,7 @@ describe('PostgreSQL E2E', () => {
       // 4. Verify DROP succeeds after unlock
       runSQL(`${psqlCmd} -d ${DB}`, `DROP TABLE ${SEED_TABLE};`, pgEnv);
       expect(() =>
-        runSQL(`${psqlCmd} -d ${DB}`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv)
+        runSQL(`${psqlCmd} -d ${DB} -t -A`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv)
       ).toThrow();
 
     } finally {
