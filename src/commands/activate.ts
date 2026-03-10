@@ -24,17 +24,12 @@ export async function activateCommand(licenseKey: string): Promise<void> {
     }
     console.log(chalk.gray('  Variant: ') + chalk.cyan(license.variantName || license.tier));
 
-    if (license.tier === 'pro') {
+    if (license.tier === 'secure') {
       console.log(chalk.gray('\n  You now have access to:'));
-      console.log(chalk.cyan('    ✓ ') + chalk.white('PostgreSQL backups'));
-      console.log(chalk.cyan('    ✓ ') + chalk.white('MySQL / MariaDB backups'));
-      console.log(chalk.cyan('    ✓ ') + chalk.white('Supabase backups'));
-      console.log(chalk.cyan('    ✓ ') + chalk.white('Unlimited snapshots'));
-    } else if (license.tier === 'secure') {
-      console.log(chalk.gray('\n  You now have access to:'));
-      console.log(chalk.cyan('    ✓ ') + chalk.white('Everything in Pro'));
       console.log(chalk.cyan('    ✓ ') + chalk.white('Immutable cloud backups'));
-      console.log(chalk.cyan('    ✓ ') + chalk.white('Write-once retention'));
+      console.log(chalk.cyan('    ✓ ') + chalk.white('E2E encrypted cloud storage'));
+      console.log(chalk.cyan('    ✓ ') + chalk.white('30-day retention'));
+      console.log(chalk.cyan('    ✓ ') + chalk.white('Restorable from any machine'));
     }
 
     console.log(chalk.gray('\n  Next: ') + chalk.cyan('oopsdb init') + chalk.gray(' to set up your database\n'));
@@ -60,7 +55,7 @@ export async function deactivateCommand(): Promise<void> {
   try {
     await deactivateLicense();
     spinner.succeed('License deactivated');
-    console.log(chalk.gray('\n  You\'re back on the Free plan (SQLite only).'));
+    console.log(chalk.gray('\n  Secure license deactivated. Local backups still work — they\'re free forever.'));
     console.log(chalk.gray('  You can re-activate anytime with: ') + chalk.cyan('oopsdb activate <key>\n'));
   } catch (err: any) {
     spinner.fail('Deactivation failed');
@@ -74,9 +69,8 @@ export async function licenseStatusCommand(): Promise<void> {
   console.log(chalk.bold('\n  OopsDB — License Status\n'));
 
   if (!license) {
-    console.log(chalk.gray('  Plan:   ') + chalk.white('Free'));
-    console.log(chalk.gray('  Access: ') + chalk.white('SQLite only'));
-    console.log(chalk.gray('\n  Upgrade: ') + chalk.cyan('https://oopsdb.com') + chalk.gray(' → then run ') + chalk.cyan('oopsdb activate <key>\n'));
+    console.log(chalk.gray('  Plan:   ') + chalk.white('Free (all local features)'));
+    console.log(chalk.gray('\n  Want cloud backups? ') + chalk.cyan('https://oopsdb.com') + chalk.gray(' → then run ') + chalk.cyan('oopsdb activate <key>\n'));
     return;
   }
 
