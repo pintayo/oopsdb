@@ -33,12 +33,34 @@ export async function secureCommand(options: {
 
   console.log(chalk.blue(`  Found latest snapshot: ${fileName} (${fileSizeMB} MB)`));
 
-  // Placeholder URL logic: In the future, this would fetch from the Cloudflare Pages backend
-  // e.g. const res = await fetch('https://oopsdb.com/api/upload-url', { ... });
-  const placeholderUploadUrl = 'https://example-bucket.s3.amazonaws.com/placeholder-url-for-mvp';
-  console.log(chalk.gray(`  Requesting secure upload token...\n`));
+  // In production, hit the live endpoint. If testing locally, hit the wrangler dev server.
+  const baseUrl = process.env.TEST_LOCAL_API ? 'http://localhost:8788' : 'https://oopsdb.com';
+  console.log(chalk.gray(`  Requesting secure upload token from ${baseUrl}...\n`));
 
-  await uploadToS3(latestFile, placeholderUploadUrl);
+  let actualUploadUrl = '';
+  try {
+    const res = await fetch(`${baseUrl}/api/upload-url?fileName=${fileName}`, {
+      headers: {
+        'Authorization': 'Bearer oops_sec_9f8b2c7d4e5a1b3c8f9d0e2a5b7c8d9e'
+      }
+    });
+    
+    if (!res.ok) {
+      const errText = await res.text();
+      console.log(chalk.red(`  Failed to get upload token: ${res.status} ${res.statusText}`));
+      console.log(chalk.gray(`  Details: ${errText}\n`));
+      return;
+    }
+    
+    const data = await res.json() as { uploadUrl: string };
+    actualUploadUrl = data.uploadUrl;
+  } catch (err: any) {
+    console.log(chalk.red(`  Network error reaching backend: ${err.message}\n`));
+    console.log(chalk.yellow(`  Tip: If testing locally, ensure you ran 'npx wrangler pages dev website' first and set TEST_LOCAL_API=1\n`));
+    return;
+  }
+
+  await uploadToS3(latestFile, actualUploadUrl);
 }
 
 async function uploadToS3(filePath: string, uploadUrl: string): Promise<void> {
