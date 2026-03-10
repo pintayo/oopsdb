@@ -1,7 +1,7 @@
 {
   "name": "oopsdb",
   "version": "1.0.0",
-  "description": "Don't let AI nuke your database. Auto-backup and 1-click restore for developers using Claude Code, OpenClaw, and other AI coding agents.",
+  "description": "Don't let AI nuke your database. Auto-backup and 1-click restore for developers using Claude Code, Cursor, Windsurf, and other AI coding agents.",
   "main": "dist/index.js",
   "bin": {
     "oopsdb": "dist/index.js"
