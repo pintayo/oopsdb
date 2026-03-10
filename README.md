@@ -67,14 +67,33 @@ oopsdb init                Set up your database connection
 oopsdb watch               Auto-backup every 5 minutes
 oopsdb watch -i 1          Auto-backup every 1 minute (paranoid mode)
 oopsdb snapshot            One-time manual backup
+oopsdb shield              Active query interceptor (blocks DROP/DELETE)
 oopsdb restore             Interactive restore from any snapshot
 oopsdb status              View backup history and stats
-oopsdb secure              Immutable cloud backups (Coming Soon)
+oopsdb secure              Immutable cloud backups
 oopsdb activate <key>      Activate a Secure license
 oopsdb deactivate          Deactivate your license on this machine
 oopsdb license             Show current license status
+oopsdb lock                Lock schema with Postgres event triggers
+oopsdb unlock              Temporarily unlock schema for migrations
 oopsdb clean               Remove all OopsDB data from project
 ```
+
+## The Shield (Query Interceptor)
+
+OopsDB Shield acts as a proxy between your application and your database. It monitors incoming SQL traffic and automatically takes a safety snapshot if it detects destructive commands like `DROP TABLE` or `DELETE` without a `WHERE` clause.
+
+```bash
+oopsdb shield --port 5433
+# Now connect your app to port 5433 instead of the default DB port.
+```
+
+## Antigravity (PostgreSQL / Supabase)
+
+OopsDB Antigravity provides database-level protection using native Postgres event triggers. Even if an AI agent bypasses the OopsDB proxy or connects directly to the DB, destructive DDL commands will be blocked at the database level.
+
+- `oopsdb lock`: Creates a trigger that blocks `DROP`, `ALTER`, and `TRUNCATE` operations.
+- `oopsdb unlock`: Takes a safety snapshot, drops the trigger, and allows schema modifications for 60 seconds before automatically re-locking.
 
 ## How It Works
 
