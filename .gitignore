@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .oopsdb/
+demo/.oopsdb/
 .env
 .env.*
 .DS_Store

@@ -78,6 +78,16 @@ oopsdb clean               Remove all OopsDB data from project
 2. `oopsdb watch` runs the native dump tool (`pg_dump`, `mysqldump`, or `sqlite3 .backup`) at your chosen interval. Output is streamed through AES-256-CBC encryption directly to disk — memory usage stays flat even for large databases.
 3. `oopsdb restore` shows your snapshots with timestamps and sizes. Pick one, confirm, and your database is rolled back. It takes a safety snapshot first, so you can always undo the undo.
 
+## Quick Demo
+
+Want to see OopsDB in action without touching your real database? We built a safe demo playground just for you.
+
+1. Clone or download this repository.
+2. Navigate to the `demo/` folder: `cd demo`
+3. Generate the dummy database: `sqlite3 test.db < seed.sql`
+4. Initialize OopsDB (it won't affect your global config because `.oopsdb` is gitignored here): `oopsdb init`
+5. Try running `oopsdb shield` and firing a `DROP TABLE users` against it to watch the interceptor catch the query!
+
 ## Requirements
 
 Your system needs the native database CLI tools:
