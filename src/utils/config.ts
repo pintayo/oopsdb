@@ -6,11 +6,8 @@ const CONFIG_DIR = path.join(process.cwd(), '.oopsdb');
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 const BACKUPS_DIR = path.join(CONFIG_DIR, 'backups');
 
-// Simple encryption using a machine-local key derived from hostname + username
-const ENCRYPTION_KEY = crypto
-  .createHash('sha256')
-  .update(`oopsdb-${process.env.USER || 'default'}-${require('os').hostname()}`)
-  .digest();
+// We no longer use a deterministic machine key because it binds the user to a specific machine.
+// Instead, we will generate a secure random 256-bit MASTER_KEY upon initialization.
 
 export interface DbConfig {
   type: 'postgres' | 'mysql' | 'sqlite';
@@ -29,20 +26,29 @@ export interface DbConfig {
 export interface OopsConfig {
   db: DbConfig;
   createdAt: string;
+  masterKey: string; // Stored as a hex string representing the 32-byte key
 }
 
-function encrypt(text: string): string {
+// We encrypt the config file itself using a static machine-local key so that
+// rogue processes can't easily read the master key in plain text from the file system.
+// Note: This machineKey is NOT used for the database backups, only the config.json.
+const MACHINE_KEY = crypto
+  .createHash('sha256')
+  .update(`oopsdb-config-${process.env.USER || 'default'}-${require('os').hostname()}`)
+  .digest();
+
+function encryptConfig(text: string): string {
   const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, iv);
+  const cipher = crypto.createCipheriv('aes-256-cbc', MACHINE_KEY, iv);
   let encrypted = cipher.update(text, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   return iv.toString('hex') + ':' + encrypted;
 }
 
-function decrypt(text: string): string {
+function decryptConfig(text: string): string {
   const [ivHex, encrypted] = text.split(':');
   const iv = Buffer.from(ivHex, 'hex');
-  const decipher = crypto.createDecipheriv('aes-256-cbc', ENCRYPTION_KEY, iv);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', MACHINE_KEY, iv);
   let decrypted = decipher.update(encrypted, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;
@@ -69,7 +75,7 @@ export function ensureConfigDir(): void {
 
 export function saveConfig(config: OopsConfig): void {
   ensureConfigDir();
-  const encrypted = encrypt(JSON.stringify(config));
+  const encrypted = encryptConfig(JSON.stringify(config));
   fs.writeFileSync(CONFIG_FILE, encrypted, 'utf8');
 }
 
@@ -79,7 +85,7 @@ export function loadConfig(): OopsConfig | null {
   }
   try {
     const encrypted = fs.readFileSync(CONFIG_FILE, 'utf8');
-    const decrypted = decrypt(encrypted);
+    const decrypted = decryptConfig(encrypted);
     return JSON.parse(decrypted);
   } catch {
     return null;
@@ -95,6 +101,14 @@ export function getConfigDir(): string {
   return CONFIG_DIR;
 }
 
+export function generateMasterKey(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
+
 export function getEncryptionKey(): Buffer {
-  return ENCRYPTION_KEY;
+  const config = loadConfig();
+  if (!config || !config.masterKey) {
+    throw new Error('No Master Key found. Please run `oopsdb init` to set up your keys.');
+  }
+  return Buffer.from(config.masterKey, 'hex');
 }
