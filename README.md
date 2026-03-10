@@ -65,10 +65,10 @@ oopsdb watch -i 1          Auto-backup every 1 minute (paranoid mode)
 oopsdb snapshot            One-time manual backup
 oopsdb restore             Interactive restore from any snapshot
 oopsdb status              View backup history and stats
-oopsdb activate <key>      Activate a Pro license
-oopsdb deactivate          Deactivate your license on this machine
-oopsdb license             Show current license status and plan
 oopsdb secure              Immutable cloud backups (Coming Soon)
+oopsdb activate <key>      Activate a Secure license
+oopsdb deactivate          Deactivate your license on this machine
+oopsdb license             Show current license status
 oopsdb clean               Remove all OopsDB data from project
 ```
 
@@ -95,17 +95,17 @@ OopsDB checks for these on `init` and gives install instructions if they're miss
 - Nothing leaves your machine — no cloud, no telemetry, no accounts
 - Add `.oopsdb/` to `.gitignore` (already in ours)
 
-## Coming Soon: `oopsdb secure`
+## Pricing
 
-Immutable cloud backups that even a rogue AI can't delete.
+**Free** — Everything local. All databases, unlimited snapshots, encrypted backups. No limits, no accounts, no strings attached.
 
-Local backups are great until the AI decides to `rm -rf .oopsdb/`. `oopsdb secure` pushes encrypted snapshots to tamper-proof cloud storage with write-once retention policies. Even if your entire machine gets wiped, your backups survive.
+**Secure** ($9/mo) — Immutable cloud backups that even a rogue AI can't delete. Local backups are great until the AI decides to `rm -rf .oopsdb/`. `oopsdb secure` pushes encrypted snapshots to tamper-proof cloud storage with write-once retention policies. Even if your entire machine gets wiped, your backups survive.
 
-Sign up for early access at [oopsdb.com/secure](https://oopsdb.com/secure).
+Learn more at [oopsdb.com](https://oopsdb.com).
 
 ## Support
 
-If OopsDB saved your database (and your afternoon), consider buying me a coffee! ☕
+If OopsDB saved your database (and your afternoon), consider buying me a coffee!
 [ko-fi.com/pintayo](https://ko-fi.com/pintayo)
 
 ## License
