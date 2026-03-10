@@ -10,7 +10,7 @@ const LICENSE_FILE = path.join(GLOBAL_CONFIG_DIR, 'license.json');
 // LemonSqueezy license API
 const LEMONSQUEEZY_API = 'https://api.lemonsqueezy.com/v1/licenses';
 
-export type Tier = 'free' | 'pro' | 'secure';
+export type Tier = 'free' | 'secure';
 
 export interface LicenseInfo {
   licenseKey: string;
@@ -54,10 +54,6 @@ export function getCurrentTier(): Tier {
   return license.tier;
 }
 
-export function requiresLicense(dbType: string): boolean {
-  return dbType !== 'sqlite';
-}
-
 function getInstanceName(): string {
   return `${os.userInfo().username}@${os.hostname()}`;
 }
@@ -68,8 +64,7 @@ function getInstanceName(): string {
 function tierFromVariant(variantName: string): Tier {
   const lower = variantName.toLowerCase();
   if (lower.includes('secure')) return 'secure';
-  if (lower.includes('pro')) return 'pro';
-  return 'pro'; // default paid tier
+  return 'secure'; // default paid tier
 }
 
 /**

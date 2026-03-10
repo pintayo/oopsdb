@@ -55,7 +55,7 @@ program
 
 program
   .command('activate <license-key>')
-  .description('Activate a Pro or Secure license key')
+  .description('Activate a Secure license key')
   .action(activateCommand);
 
 program

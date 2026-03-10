@@ -333,86 +333,59 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Simple pricing. <br />Start free, upgrade
                     when you need it.</h2>
-                <p class="text-lg text-slate-600">Free covers SQLite. Go Pro for full database support.</p>
+                <p class="text-lg text-slate-600">100% free for local backups. Add cloud protection when you need it.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
 
                 <!-- Free -->
-                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 shadow-soft flex flex-col">
+                <div
+                    class="bg-white rounded-2xl p-8 border-2 border-indigo-600 shadow-xl ring-1 ring-indigo-600/10 flex flex-col relative">
+                    <div
+                        class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
+                        Open Source</div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Free</h3>
                     <div class="mb-6">
                         <span class="text-4xl font-extrabold text-slate-900">$0</span>
                         <span class="text-slate-500">/forever</span>
                     </div>
-                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Local database backups for SQLite. Perfect
-                        for solo projects and vibe coding.</p>
+                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Full local database protection. PostgreSQL, MySQL,
+                        Supabase, and SQLite. No limits.</p>
                     <ul class="space-y-3 mb-8 text-sm text-slate-700 flex-1">
                         <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> SQLite backups</li>
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> PostgreSQL support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> MySQL / MariaDB support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Supabase support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> SQLite support</li>
+                        <li class="flex gap-2 items-start"><i data-feather="check"
+                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Unlimited snapshots</li>
                         <li class="flex gap-2 items-start"><i data-feather="check"
                                 class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Auto-backup on timer</li>
                         <li class="flex gap-2 items-start"><i data-feather="check"
                                 class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Interactive restore</li>
                         <li class="flex gap-2 items-start"><i data-feather="check"
                                 class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> Encrypted at rest</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-green-500 shrink-0 mt-0.5"></i> 10 snapshots</li>
                     </ul>
                     <div class="bg-slate-900 text-white text-center py-3 rounded-xl font-mono text-sm">
                         npm i -g oopsdb
                     </div>
                 </div>
 
-                <!-- Pro -->
-                <div
-                    class="bg-white rounded-2xl p-8 border-2 border-indigo-600 shadow-xl ring-1 ring-indigo-600/10 flex flex-col relative">
-                    <div
-                        class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
-                        Most Popular</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">Pro</h3>
-                    <div class="mb-6">
-                        <span class="text-4xl font-extrabold text-slate-900">$9</span>
-                        <span class="text-slate-500">/mo</span>
-                    </div>
-                    <p class="text-slate-600 mb-8 text-sm leading-relaxed">Full database protection. PostgreSQL, MySQL,
-                        Supabase, and SQLite. Unlimited snapshots.</p>
-                    <ul class="space-y-3 mb-8 text-sm text-slate-700 flex-1">
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Everything in Free</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> PostgreSQL support</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> MySQL / MariaDB support</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Supabase support</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Unlimited snapshots</li>
-                        <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i> Priority support</li>
-                    </ul>
-                    <!-- <a href="https://pintayo.lemonsqueezy.com/checkout/buy/898114f4-caf7-4674-b676-9a0888fbdfaa"
-                        class="block text-center py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200">
-                        Get Pro
-                    </a> -->
-                    <button disabled
-                        class="block w-full text-center py-3 bg-slate-300 text-slate-500 rounded-xl font-semibold cursor-not-allowed">
-                        Coming Soon
-                    </button>
-                </div>
-
                 <!-- Secure -->
                 <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 shadow-soft flex flex-col relative">
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Secure</h3>
                     <div class="mb-6">
-                        <span class="text-4xl font-extrabold text-slate-900">$29</span>
+                        <span class="text-4xl font-extrabold text-slate-900">$9</span>
                         <span class="text-slate-500">/mo</span>
                     </div>
                     <p class="text-slate-600 mb-8 text-sm leading-relaxed">Immutable cloud backups. If your laptop
-                        dies or gets wiped, your data survives.</p>
+                        dies, your AI goes rogue, or your disk gets wiped — your data survives.</p>
                     <ul class="space-y-3 mb-8 text-sm text-slate-700 flex-1">
                         <li class="flex gap-2 items-start"><i data-feather="check"
-                                class="w-4 h-4 text-slate-400 shrink-0 mt-0.5"></i> Everything in Pro</li>
+                                class="w-4 h-4 text-slate-400 shrink-0 mt-0.5"></i> Everything in Free</li>
                         <li class="flex gap-2 items-start"><i data-feather="check"
                                 class="w-4 h-4 text-purple-600 shrink-0 mt-0.5"></i> E2E Encrypted Cloud Storage</li>
                         <li class="flex gap-2 items-start"><i data-feather="check"
