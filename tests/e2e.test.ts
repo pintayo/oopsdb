@@ -77,6 +77,18 @@ async function importDumper() {
   return await import('../dist/utils/dumper');
 }
 
+/** Import lock/unlock commands dynamically */
+async function importAntigravity() {
+  const modPath1 = require.resolve('../dist/commands/lock');
+  delete require.cache[modPath1];
+  const modPath2 = require.resolve('../dist/commands/unlock');
+  delete require.cache[modPath2];
+  return {
+    ...await import('../dist/commands/lock'),
+    ...await import('../dist/commands/unlock')
+  };
+}
+
 // ─── Seed SQL (piped to stdin to avoid shell escaping issues) ─────────────────
 
 const SEED_TABLE = 'oopsdb_e2e_test';
@@ -219,6 +231,41 @@ describe('PostgreSQL E2E', () => {
       process.chdir(origCwd);
     }
   }, 60_000);
+
+  it('lock → verifies DDL block → unlock → verifies DDL allowed', async () => {
+    const origCwd = process.cwd();
+    try {
+      process.chdir(workDir);
+      const { lockCommand } = await importAntigravity();
+
+      // 1. Engage lock
+      await lockCommand();
+
+      // 2. Verify DROP fails
+      let dropError = null;
+      try {
+        runSQL(`${psqlCmd} -d ${DB}`, `DROP TABLE ${SEED_TABLE};`, pgEnv);
+      } catch (err) {
+        dropError = err;
+      }
+      expect(dropError).not.toBeNull();
+      // Ensure the table is still there
+      const count = runSQL(`${psqlCmd} -d ${DB}`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv);
+      expect(parseInt(count, 10)).toBe(3);
+
+      // 3. To unlock without hanging the test on the 60s setInterval, we'll manually execute the unlock SQL
+      runSQL(`${psqlCmd} -d ${DB}`, `DROP EVENT TRIGGER IF EXISTS oopsdb_protect_schema;`, pgEnv);
+
+      // 4. Verify DROP succeeds after unlock
+      runSQL(`${psqlCmd} -d ${DB}`, `DROP TABLE ${SEED_TABLE};`, pgEnv);
+      expect(() =>
+        runSQL(`${psqlCmd} -d ${DB}`, `SELECT count(*) FROM ${SEED_TABLE};`, pgEnv)
+      ).toThrow();
+
+    } finally {
+      process.chdir(origCwd);
+    }
+  }, 30_000);
 });
 
 // ─── MySQL E2E ────────────────────────────────────────────────────────────────

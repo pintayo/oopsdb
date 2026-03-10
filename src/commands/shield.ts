@@ -1,4 +1,5 @@
 import * as net from 'net';
+import * as tls from 'tls';
 import chalk from 'chalk';
 import ora from 'ora';
 import { loadConfig } from '../utils/config';
@@ -16,16 +17,34 @@ export async function shieldCommand(options: { port?: string }): Promise<void> {
   const targetPort = config.db.port || (config.db.type === 'postgres' ? 5432 : 3306);
   const targetHost = config.db.host || 'localhost';
 
+  const isSsl = config.db.supabase || config.db.sslmode === 'require';
+
   console.log(chalk.bold('\n  OopsDB Shield ' + chalk.green('ACTIVE')));
   console.log(chalk.gray(`  Listening on port ${proxyPort} -> Forwarding to ${config.db.type} on ${targetPort}\n`));
+
+  if (isSsl) {
+    console.log(chalk.yellow('  [SSL Detected] Proxy running in Pass-Through mode.'));
+    console.log(chalk.gray('  Deep-packet inspection (destructive command detection) is DISABLED.'));
+    console.log(chalk.gray('  To enable interception on SSL connections, local certificates/MITM are required.\n'));
+  }
 
   const DESTRUCTIVE_REGEX = /(DROP\s+TABLE|TRUNCATE\s+TABLE|DELETE\s+FROM)/i;
 
   const server = net.createServer((clientSocket: net.Socket) => {
-    const targetSocket = net.createConnection({
-      host: targetHost,
-      port: targetPort
-    });
+    let targetSocket: net.Socket | tls.TLSSocket;
+
+    if (isSsl) {
+      targetSocket = tls.connect({
+        host: targetHost,
+        port: targetPort,
+        servername: targetHost
+      });
+    } else {
+      targetSocket = net.createConnection({
+        host: targetHost,
+        port: targetPort
+      });
+    }
 
     targetSocket.on('error', (err: any) => {
       console.log(chalk.red(`\n  Database connection error: ${err.message}`));
@@ -41,8 +60,15 @@ export async function shieldCommand(options: { port?: string }): Promise<void> {
 
     // Handle traffic from Client to DB (with interception)
     clientSocket.on('data', async (chunk: Buffer) => {
+      // If SSL is active, we bypass deep-packet inspection because the traffic is encrypted
+      // (or we are acting as a simple TLS pass-through for the application)
+      if (isSsl) {
+        targetSocket.write(chunk);
+        return;
+      }
+
       const dataString = chunk.toString();
-      
+
       if (DESTRUCTIVE_REGEX.test(dataString)) {
         // Destructive command detected!
         clientSocket.pause();
@@ -50,7 +76,7 @@ export async function shieldCommand(options: { port?: string }): Promise<void> {
 
         console.log(chalk.bgRed.white.bold('\n  WARNING  ') + chalk.red(' Destructive command intercepted!'));
         console.log(chalk.gray(`  Command snippet: ${dataString.substring(0, 100).replace(/\n/g, ' ')}\n`));
-        
+
         const spinner = ora('Taking safety snapshot...').start();
         try {
           await createSnapshot(config.db);

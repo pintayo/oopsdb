@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -45,6 +46,7 @@ describe('Config encryption', () => {
     const config = {
       db: { type: 'postgres' as const, host: 'localhost', port: 5432, user: 'admin', password: 's3cret!@#$', database: 'myapp' },
       createdAt: '2025-01-01T00:00:00.000Z',
+      masterKey: 'test'
     };
 
     saveConfig(config);
@@ -63,6 +65,7 @@ describe('Config encryption', () => {
     saveConfig({
       db: { type: 'sqlite' as const, database: '/tmp/test.db' },
       createdAt: new Date().toISOString(),
+      masterKey: 'test'
     });
 
     const raw = fs.readFileSync(path.join(workDir, '.oopsdb', 'config.json'), 'utf8');
@@ -93,6 +96,7 @@ describe('Config encryption', () => {
     saveConfig({
       db: { type: 'mysql' as const, host: 'db.example.com', port: 3306, user: 'root', password: weirdPassword, database: 'prod' },
       createdAt: new Date().toISOString(),
+      masterKey: 'test'
     });
 
     const loaded = loadConfig();
@@ -244,7 +248,7 @@ describe('Dump command building', () => {
     try {
       // Must import AFTER chdir so config.ts picks up the right cwd
       const { saveConfig, loadConfig } = freshImport<typeof import('../dist/utils/config')>('../dist/utils/config');
-      saveConfig({ db: config, createdAt: new Date().toISOString() });
+      saveConfig({ db: config, createdAt: new Date().toISOString(), masterKey: 'test' });
       const loaded = loadConfig();
       expect(loaded!.db.password).toBe('secret');
       // Password is stored encrypted, not plain text
@@ -286,6 +290,7 @@ describe('Supabase config', () => {
         sslmode: 'require',
       },
       createdAt: new Date().toISOString(),
+      masterKey: 'test'
     };
 
     saveConfig(config);
@@ -312,6 +317,7 @@ describe('Supabase config', () => {
         sslmode: 'require',
       },
       createdAt: new Date().toISOString(),
+      masterKey: 'test'
     };
 
     saveConfig(config);

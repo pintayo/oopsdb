@@ -10,6 +10,8 @@ import { secureCommand } from './commands/secure';
 import { cleanCommand } from './commands/clean';
 import { activateCommand, deactivateCommand, licenseStatusCommand } from './commands/activate';
 import { shieldCommand } from './commands/shield';
+import { lockCommand } from './commands/lock';
+import { unlockCommand } from './commands/unlock';
 
 // Read version from package.json at runtime
 const pkg = require('../package.json');
@@ -53,6 +55,16 @@ program
   .description('Start a database proxy interceptor that prevents destructive queries')
   .option('-p, --port <port>', 'Proxy port', '5433')
   .action(shieldCommand);
+
+program
+  .command('lock')
+  .description('Bulletproof your Postgres database against schema deletion')
+  .action(lockCommand);
+
+program
+  .command('unlock')
+  .description('Temporarily allow schema migrations (auto-relocks after 60s)')
+  .action(unlockCommand);
 
 program
   .command('secure')

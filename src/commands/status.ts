@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { loadConfig, getBackupsDir } from '../utils/config';
+import { loadLicense } from '../utils/license';
 import { listSnapshots } from '../utils/dumper';
 import * as path from 'path';
 
@@ -35,6 +36,14 @@ export async function statusCommand(): Promise<void> {
     console.log(`    Host:     ${chalk.cyan(config.db.host + ':' + config.db.port)}`);
   }
   console.log(`    Since:    ${chalk.cyan(new Date(config.createdAt).toLocaleDateString())}`);
+
+  const license = loadLicense();
+  const tierLabel = license ? license.tier.toUpperCase() : 'FREE';
+  console.log(`    Plan:     ${chalk.green(tierLabel)}`);
+
+  if (tierLabel === 'FREE') {
+    console.log(chalk.yellow('    ⚠️  Local snapshots only. Rogue AI or disk failure could wipe these.'));
+  }
   console.log();
 
   console.log(chalk.gray('  Backups'));
