@@ -43,16 +43,26 @@
     "LICENSE"
   ],
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1005.0",
+    "@aws-sdk/s3-request-presigner": "^3.1005.0",
     "chalk": "^4.1.2",
     "commander": "^12.1.0",
     "inquirer": "^8.2.6",
     "ora": "^5.4.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260310.1",
     "@types/inquirer": "^8.2.10",
     "@types/node": "^22.0.0",
     "testcontainers": "^11.12.0",
     "typescript": "^5.7.0",
     "vitest": "^4.0.18"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "types": "./dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/pintayo/oopsdb/issues"
   }
 }

@@ -9,6 +9,7 @@ import { snapshotCommand } from './commands/snapshot';
 import { secureCommand } from './commands/secure';
 import { cleanCommand } from './commands/clean';
 import { activateCommand, deactivateCommand, licenseStatusCommand } from './commands/activate';
+import { shieldCommand } from './commands/shield';
 
 // Read version from package.json at runtime
 const pkg = require('../package.json');
@@ -23,6 +24,7 @@ program
 program
   .command('init')
   .description('Set up database connection for backups')
+  .option('--recovery <key>', 'Recover configuration using a saved Master Key')
   .action(initCommand);
 
 program
@@ -45,6 +47,12 @@ program
   .command('status')
   .description('Show backup status and recent snapshots')
   .action(statusCommand);
+
+program
+  .command('shield')
+  .description('Start a database proxy interceptor that prevents destructive queries')
+  .option('-p, --port <port>', 'Proxy port', '5433')
+  .action(shieldCommand);
 
 program
   .command('secure')

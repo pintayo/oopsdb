@@ -3,12 +3,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import chalk from 'chalk';
 import ora from 'ora';
-import { saveConfig, loadConfig, DbConfig, OopsConfig } from '../utils/config';
-import { createSnapshot } from '../utils/dumper';
+import { saveConfig, loadConfig, DbConfig, OopsConfig, generateMasterKey } from '../utils/config';
+import { createSnapshot, restoreSnapshot } from '../utils/dumper';
 import { preflightCheck } from '../utils/preflight';
 import { getCurrentTier } from '../utils/license';
 
-export async function initCommand(): Promise<void> {
+export async function initCommand(options: { recovery?: string } = {}): Promise<void> {
   console.log(chalk.bold('\n  OopsDB Setup\n'));
   console.log(chalk.gray('  Protect your database from AI-powered disasters.\n'));
 
@@ -121,13 +121,39 @@ export async function initCommand(): Promise<void> {
     };
   }
 
+  // Handle Master Key & Recovery
+  const isRecovery = !!options.recovery;
+  const masterKey = options.recovery || generateMasterKey();
+
   const config: OopsConfig = {
     db: dbConfig,
     createdAt: new Date().toISOString(),
+    masterKey,
   };
 
   saveConfig(config);
-  console.log(chalk.green('\n  Config saved to .oopsdb/config.json (encrypted)\n'));
+  console.log(chalk.green('\n  Config saved to .oopsdb/config.json (encrypted local block)\n'));
+
+  // If this is a new setup, force them to look at the master key
+  if (!isRecovery) {
+    console.log(chalk.bgRed.white.bold('\n  CRITICAL SECURITY STEP: SAVE YOUR MASTER KEY  '));
+    console.log(chalk.red('  If an AI deletes your project folder or you switch devices,'));
+    console.log(chalk.red('  this is the ONLY WAY to decrypt your cloud backups.'));
+    console.log(chalk.red('  Save it in 1Password or another password manager right now:\n'));
+    console.log(chalk.yellow.bold(`  ${masterKey}\n`));
+    
+    await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'keySaved',
+        message: 'I have securely saved my Master Key.',
+        default: false,
+        validate: (input: boolean) => input ? true : 'You must save the Master Key to continue.',
+      },
+    ]);
+  } else {
+    console.log(chalk.blue.bold('\n  Recovery Mode Active: Master Key loaded from flag.\n'));
+  }
 
   const { takeSnapshot } = await inquirer.prompt([
     {
