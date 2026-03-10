@@ -4,6 +4,10 @@
 
 Auto-backup and 1-click restore for developers using Claude Code, Cursor, Windsurf, and other AI coding agents.
 
+<p align="center">
+  <img src="website/assets/oopsdb_demo.gif" alt="OopsDB Demo Screen Recording" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1)">
+</p>
+
 ---
 
 ## The Problem
