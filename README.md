@@ -136,11 +136,6 @@ OopsDB checks for these on `init` and gives install instructions if they're miss
 
 Learn more at [oopsdb.com](https://oopsdb.com).
 
-## Support
-
-If OopsDB saved your database (and your afternoon), consider buying me a coffee!
-[ko-fi.com/pintayo](https://ko-fi.com/pintayo)
-
 ## License
 
 MIT
