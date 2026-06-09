@@ -3,6 +3,7 @@ import ora from 'ora';
 import { loadConfig } from '../utils/config';
 import { createSnapshot } from '../utils/dumper';
 import { preflightCheck } from '../utils/preflight';
+import { recordSnapshotAndMaybeNudge } from '../utils/growth';
 import * as fs from 'fs';
 
 export async function snapshotCommand(): Promise<void> {
@@ -29,6 +30,7 @@ export async function snapshotCommand(): Promise<void> {
     const sizeKB = Math.round(fs.statSync(file).size / 1024);
     spinner.succeed(`Snapshot saved: ${file} (${sizeKB} KB)`);
     console.log(chalk.green('\n  Done! Run `oopsdb restore` if you need to roll back.\n'));
+    recordSnapshotAndMaybeNudge('snapshot');
   } catch (err: any) {
     spinner.fail(`Snapshot failed: ${err.message}`);
     console.log(chalk.yellow('\n  Tip: Make sure your database tools are installed and the database is running.\n'));

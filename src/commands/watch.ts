@@ -3,6 +3,7 @@ import ora from 'ora';
 import { loadConfig } from '../utils/config';
 import { createSnapshot, listSnapshots } from '../utils/dumper';
 import { preflightCheck } from '../utils/preflight';
+import { recordSnapshotAndMaybeNudge } from '../utils/growth';
 
 export async function watchCommand(options: { interval: string }): Promise<void> {
   const config = loadConfig();
@@ -55,6 +56,7 @@ async function takeSnapshotWithLog(dbConfig: any): Promise<void> {
     const file = await createSnapshot(dbConfig);
     const sizeKB = Math.round(require('fs').statSync(file).size / 1024);
     spinner.succeed(`[${new Date().toLocaleTimeString()}] Snapshot saved (${sizeKB} KB)`);
+    recordSnapshotAndMaybeNudge('watch');
   } catch (err: any) {
     spinner.fail(`[${new Date().toLocaleTimeString()}] Snapshot failed: ${err.message}`);
   }

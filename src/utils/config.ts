@@ -90,9 +90,40 @@ export function loadConfig(): OopsConfig | null {
     return null;
   }
   try {
-    const encrypted = fs.readFileSync(getConfigFilePath(), 'utf8');
-    const decrypted = decryptConfig(encrypted);
-    return JSON.parse(decrypted);
+    const raw = fs.readFileSync(getConfigFilePath(), 'utf8');
+    let parsed: any = null;
+    let needsMigration = false;
+    try {
+      parsed = JSON.parse(decryptConfig(raw));
+    } catch {
+      // Backward compat: configs written by older versions were plaintext JSON
+      try {
+        parsed = JSON.parse(raw);
+        needsMigration = true;
+      } catch {
+        return null;
+      }
+    }
+    if (!parsed || !parsed.db) {
+      return null;
+    }
+    // Backward compat: older configs had no masterKey / createdAt
+    if (!parsed.masterKey) {
+      parsed.masterKey = generateMasterKey();
+      needsMigration = true;
+    }
+    if (!parsed.createdAt) {
+      parsed.createdAt = new Date().toISOString();
+      needsMigration = true;
+    }
+    if (needsMigration) {
+      try {
+        saveConfig(parsed as OopsConfig); // re-save encrypted, current shape
+      } catch {
+        /* migration is best-effort; the in-memory config is still valid */
+      }
+    }
+    return parsed as OopsConfig;
   } catch {
     return null;
   }

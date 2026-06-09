@@ -4,6 +4,7 @@ import ora from 'ora';
 import { loadConfig } from '../utils/config';
 import { listSnapshots, restoreSnapshot, createSnapshot } from '../utils/dumper';
 import { preflightCheck } from '../utils/preflight';
+import { showRestoreSaveMoment } from '../utils/growth';
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -87,6 +88,7 @@ export async function restoreCommand(): Promise<void> {
     await restoreSnapshot(config.db, selectedSnapshot);
     restoreSpinner.succeed('Database restored successfully!');
     console.log(chalk.green('\n  Your database has been rolled back. Crisis averted!\n'));
+    showRestoreSaveMoment();
   } catch (err: any) {
     restoreSpinner.fail(`Restore failed: ${err.message}`);
     console.log(chalk.red('\n  The restore did not complete. Your database may be in a partial state.'));
