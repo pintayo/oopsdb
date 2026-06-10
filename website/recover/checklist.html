@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 8-Step Database Disaster Checklist — OopsDB</title>
+<meta name="description" content="Print this before you need it. The exact steps to run in the first 10 minutes after a database disaster — in order, no panic.">
+<style>
+body{font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif;color:#0f172a;background:#f8fafc;margin:0}
+.wrap{max-width:720px;margin:0 auto;padding:48px 22px 80px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.15;letter-spacing:-.02em}
+.sub{color:#64748b;margin:12px 0 36px;font-size:17px}
+.step{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 22px;margin-bottom:12px;display:flex;gap:16px}
+.n{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.step h3{margin:2px 0 6px;font-size:16.5px}
+.step p{margin:0;color:#475569;font-size:14.5px}
+code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:2px 7px;font-size:13px}
+.warn{background:#fff7ed;border:1px solid #fdba74;border-radius:14px;padding:16px 20px;margin:28px 0;font-size:14.5px;color:#9a3412}
+.cta{background:#0f172a;border-radius:18px;padding:30px;color:#fff;margin-top:38px}
+.cta h2{margin:0 0 8px;font-size:22px}
+.cta p{color:#94a3b8;margin:0 0 18px;font-size:15px}
+.cta a{display:inline-block;background:#22c55e;color:#052e16;text-decoration:none;font-weight:700;padding:13px 24px;border-radius:10px;font-size:15px}
+.print{float:right;font-size:13.5px;color:#64748b}
+@media print{.cta,.print{display:none}}
+</style>
+</head>
+<body><div class="wrap">
+<a class="print" href="#" onclick="print();return false">🖨 Print this page</a>
+<h1>The 8-Step Database Disaster Checklist</h1>
+<p class="sub">Run these in order. The first three stop the bleeding — do them before you google anything.</p>
+
+<div class="step"><div class="n">1</div><div><h3>Stop all writes — now</h3><p>Pause your app, workers and cron jobs. Every write after the incident overwrites data you might still recover. <code>systemctl stop app</code> or scale to zero.</p></div></div>
+<div class="step"><div class="n">2</div><div><h3>Disconnect the thing that did it</h3><p>AI agent, migration script, console session — kill its connection before it "helpfully" retries. Revoke its credentials if you're not sure.</p></div></div>
+<div class="step"><div class="n">3</div><div><h3>Snapshot the damaged state</h3><p>Counter-intuitive but critical: dump what's LEFT before any repair attempt. Failed repairs make things worse. <code>pg_dump dbname > damaged.sql</code></p></div></div>
+<div class="step"><div class="n">4</div><div><h3>Write down the exact time</h3><p>Point-in-time recovery needs the minute it happened. Check your app logs for the last good request if you're unsure.</p></div></div>
+<div class="step"><div class="n">5</div><div><h3>List your recovery options — oldest data wins</h3><p>Managed host PITR (Supabase/Neon/RDS), your own backups, replicas, local snapshots, even yesterday's staging copy. Don't start with the first idea — start with the most complete one.</p></div></div>
+<div class="step"><div class="n">6</div><div><h3>Restore to a NEW database first</h3><p>Never restore over production. Restore side-by-side, verify the data is good, then switch. <code>createdb restore_check && psql restore_check < backup.sql</code></p></div></div>
+<div class="step"><div class="n">7</div><div><h3>Diff before you switch</h3><p>Compare row counts of your critical tables between damaged and restored. You want to know what the restore loses (data written after the backup) before you commit to it.</p></div></div>
+<div class="step"><div class="n">8</div><div><h3>Write the 3-line post-mortem</h3><p>What happened, what saved you (or didn't), what changes today. If the answer to "what saved you" was luck — fix that while the pain is fresh.</p></div></div>
+
+<div class="warn"><b>If you have no backup at all:</b> stop here and check your host's dashboard anyway — Supabase, Neon, Railway and RDS often have automatic backups you never configured. Many "no backup" disasters end with finding one.</div>
+
+<div class="cta">
+<h2>Step 0 for next time: make this checklist useless</h2>
+<p>OopsDB snapshots your database every 5 minutes, encrypted, locally — restore in one command. Free CLI, works with Postgres, Supabase, MySQL and SQLite.</p>
+<a href="https://oopsdb.com">npx oopsdb init →</a>
+</div>
+</div></body>
+</html>

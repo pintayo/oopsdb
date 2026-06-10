@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database recovery guides — undo DROP TABLE, DELETE &amp; more | OopsDB</title>
+<meta name="description" content="Calm, step-by-step recovery guides for when you or your AI agent runs a destructive query against Postgres, Supabase, MySQL or SQLite.">
+<link rel="canonical" href="https://oopsdb.com/recover/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Database recovery guides — undo DROP TABLE, DELETE &amp; more | OopsDB">
+<meta property="og:description" content="Calm, step-by-step recovery guides for when you or your AI agent runs a destructive query against Postgres, Supabase, MySQL or SQLite.">
+<meta property="og:url" content="https://oopsdb.com/recover/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="https://github.com/pintayo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"IBM Plex Sans"','sans-serif'],display:['"Space Grotesk"','sans-serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Database recovery guides — undo DROP TABLE, DELETE & more | OopsDB","description":"Calm, step-by-step recovery guides for when you or your AI agent runs a destructive query against Postgres, Supabase, MySQL or SQLite.","url":"https://oopsdb.com/recover/","datePublished":"2026-06-09","author":{"@type":"Organization","name":"OopsDB"},"publisher":{"@type":"Organization","name":"OopsDB"}}</script>
+</head>
+<body class="bg-white text-slate-700 antialiased">
+<nav class="fixed w-full z-50 bg-white/85 backdrop-blur-md border-b border-slate-200">
+  <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i data-feather="database" class="w-4 h-4"></i></div>
+      <span class="font-display font-bold text-xl tracking-tight text-slate-900">OopsDB</span>
+    </a>
+    <div class="flex items-center gap-6">
+      <a href="/recover/" class="text-sm font-medium text-slate-600 hover:text-slate-900 hidden sm:block">Recovery guides</a>
+      <a href="/#pricing" class="text-sm font-medium text-slate-600 hover:text-slate-900 hidden sm:block">Pricing</a>
+      <a href="https://github.com/pintayo/oopsdb" target="_blank" class="text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-2"><i data-feather="github" class="w-4 h-4"></i><span class="hidden sm:inline">GitHub</span></a>
+    </div>
+  </div>
+</nav>
+<main class="pt-28 pb-10">
+  <div class="max-w-4xl mx-auto px-6">
+    <h1 class="font-display text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-5">Database recovery guides</h1>
+    <p class="text-lg text-slate-600 leading-relaxed mb-10 max-w-2xl">A destructive query — yours or your AI agent's — just hit production. Find the exact recovery steps for your database, then make sure it never happens again.</p>
+    <div class="flex flex-wrap gap-2 mb-12"><a href="/recover/cursor-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">Cursor deleted my database</a>
+<a href="/recover/claude-code-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">Claude Code deleted my database</a>
+<a href="/recover/windsurf-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">Windsurf deleted my database</a>
+<a href="/recover/github-copilot-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">GitHub Copilot deleted my database</a>
+<a href="/recover/chatgpt-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">ChatGPT deleted my database</a>
+<a href="/recover/replit-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">Replit deleted my database</a>
+<a href="/recover/lovable-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">Lovable deleted my database</a>
+<a href="/recover/v0-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">v0 deleted my database</a>
+<a href="/recover/bolt-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">Bolt deleted my database</a>
+<a href="/recover/ai-agent-deleted-my-database/" class="px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:border-indigo-300 hover:bg-slate-50">AI agent deleted my database</a></div>
+    <div class="grid sm:grid-cols-2 gap-5"><div class="rounded-2xl border border-slate-200 p-6">
+    <h3 class="font-display text-lg font-bold text-slate-900 mb-3">PostgreSQL</h3>
+    <ul class="space-y-2"><li><a href="/recover/postgres-drop-table/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP TABLE</a></li>
+<li><a href="/recover/postgres-delete-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DELETE without WHERE</a></li>
+<li><a href="/recover/postgres-truncate/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from TRUNCATE</a></li>
+<li><a href="/recover/postgres-drop-database/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP DATABASE</a></li>
+<li><a href="/recover/postgres-update-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from UPDATE without WHERE</a></li></ul>
+  </div>
+<div class="rounded-2xl border border-slate-200 p-6">
+    <h3 class="font-display text-lg font-bold text-slate-900 mb-3">Supabase</h3>
+    <ul class="space-y-2"><li><a href="/recover/supabase-drop-table/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP TABLE</a></li>
+<li><a href="/recover/supabase-delete-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DELETE without WHERE</a></li>
+<li><a href="/recover/supabase-truncate/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from TRUNCATE</a></li>
+<li><a href="/recover/supabase-drop-database/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP DATABASE</a></li>
+<li><a href="/recover/supabase-update-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from UPDATE without WHERE</a></li></ul>
+  </div>
+<div class="rounded-2xl border border-slate-200 p-6">
+    <h3 class="font-display text-lg font-bold text-slate-900 mb-3">MySQL / MariaDB</h3>
+    <ul class="space-y-2"><li><a href="/recover/mysql-drop-table/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP TABLE</a></li>
+<li><a href="/recover/mysql-delete-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DELETE without WHERE</a></li>
+<li><a href="/recover/mysql-truncate/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from TRUNCATE</a></li>
+<li><a href="/recover/mysql-drop-database/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP DATABASE</a></li>
+<li><a href="/recover/mysql-update-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from UPDATE without WHERE</a></li></ul>
+  </div>
+<div class="rounded-2xl border border-slate-200 p-6">
+    <h3 class="font-display text-lg font-bold text-slate-900 mb-3">SQLite</h3>
+    <ul class="space-y-2"><li><a href="/recover/sqlite-drop-table/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP TABLE</a></li>
+<li><a href="/recover/sqlite-delete-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DELETE without WHERE</a></li>
+<li><a href="/recover/sqlite-truncate/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from TRUNCATE</a></li>
+<li><a href="/recover/sqlite-drop-database/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP DATABASE</a></li>
+<li><a href="/recover/sqlite-update-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from UPDATE without WHERE</a></li></ul>
+  </div>
+<div class="rounded-2xl border border-slate-200 p-6">
+    <h3 class="font-display text-lg font-bold text-slate-900 mb-3">Neon (Postgres)</h3>
+    <ul class="space-y-2"><li><a href="/recover/neon-drop-table/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP TABLE</a></li>
+<li><a href="/recover/neon-delete-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DELETE without WHERE</a></li>
+<li><a href="/recover/neon-truncate/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from TRUNCATE</a></li>
+<li><a href="/recover/neon-drop-database/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from DROP DATABASE</a></li>
+<li><a href="/recover/neon-update-no-where/" class="text-[15px] text-slate-600 hover:text-indigo-600 flex items-center gap-2"><i data-feather="chevron-right" class="w-4 h-4 text-slate-400"></i>Recover from UPDATE without WHERE</a></li></ul>
+  </div></div>
+    <section class="mt-16 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-8">
+    <h2 class="font-display text-2xl font-bold text-slate-900 mb-3">Make sure this never happens again</h2>
+    <p class="text-slate-700 leading-relaxed mb-4">The honest truth: your coding agent will eventually run <code class="font-mono bg-white px-1.5 py-0.5 rounded text-slate-800 text-sm">DROP TABLE</code> again. The fix isn't to trust it more — it's to keep an automatic, recent snapshot so a bad query is a 30-second rollback instead of a lost weekend.</p>
+    <p class="text-slate-700 leading-relaxed mb-5"><strong>OopsDB</strong> takes an encrypted snapshot of your database every few minutes and restores it with one command. It's free, open-source, and runs entirely on your machine — set it up in two minutes and the next <code class="font-mono bg-white px-1.5 py-0.5 rounded text-slate-800 text-sm">DROP TABLE</code> won't cost you anything.</p>
+    <div class="flex flex-col sm:flex-row gap-3 mb-3">
+      <button onclick="navigator.clipboard.writeText('npm install -g oopsdb')" class="flex items-center justify-between px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-mono text-sm transition-colors"><span><span class="text-slate-500">$</span> npm install -g oopsdb</span><i data-feather="copy" class="w-4 h-4 ml-6 text-slate-500"></i></button>
+      <a href="/#how" class="flex items-center justify-center px-6 py-3.5 text-slate-900 border border-slate-300 rounded-xl font-semibold hover:bg-white transition-colors">See how it works</a>
+    </div>
+    <p class="text-xs text-slate-500">Free &amp; open-source for local backups · optional €8/mo cloud vault keeps a copy off your machine · <a href="https://pintayo.lemonsqueezy.com/checkout/buy/dc9a05fe-5bad-4a58-a94f-c7963e0d7995" class="underline hover:text-slate-700">cancel anytime</a>.</p>
+  </section>
+  </div>
+</main>
+
+<!-- owned-list capture -->
+<div id="oopsdb-cap" style="max-width:760px;margin:40px auto;padding:26px 28px;background:#0f172a;border-radius:18px;color:#fff;font-family:system-ui,sans-serif">
+  <div style="font-weight:700;font-size:18px;margin-bottom:6px">📋 The 8-step disaster checklist — print it before you need it</div>
+  <div style="color:#94a3b8;font-size:14.5px;margin-bottom:14px">The exact first-10-minutes playbook from this guide, on one page. Get the link by email:</div>
+  <form onsubmit="(function(f){var e=f.email.value;fetch('https://reply.pintayo.nl/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,source:'oopsdb-checklist'})}).then(function(){f.style.display='none';document.getElementById('cap-ok').style.display='block'});})(this);return false" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input name="email" type="email" required placeholder="you@company.com" style="flex:1;min-width:200px;font:15px system-ui;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#fff">
+    <button type="submit" style="font:600 15px system-ui;background:#22c55e;color:#052e16;border:0;border-radius:10px;padding:12px 22px;cursor:pointer">Send me the checklist</button>
+  </form>
+  <div id="cap-ok" style="display:none;font-size:15px;color:#86efac">✓ Sent! Here it is right now too: <a href="/recover/checklist" style="color:#86efac;font-weight:700">open the checklist →</a></div>
+</div>
+<footer class="py-12 border-t border-slate-200 text-center">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="flex items-center justify-center gap-2 mb-4">
+      <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i data-feather="database" class="w-4 h-4"></i></div>
+      <span class="font-display font-bold text-lg text-slate-900">OopsDB</span>
+    </div>
+    <p class="text-slate-500 mb-6 text-sm">An undo button for the day your AI agent gets too confident.</p>
+    <div class="flex justify-center gap-6 text-sm font-medium text-slate-500">
+      <a href="/" class="hover:text-slate-900">Home</a>
+      <a href="/recover/" class="hover:text-slate-900">All recovery guides</a>
+      <a href="https://github.com/pintayo/oopsdb" target="_blank" class="hover:text-slate-900">GitHub</a>
+      <a href="https://www.npmjs.com/package/oopsdb" target="_blank" class="hover:text-slate-900">npm</a>
+    </div>
+    <p class="mt-8 text-xs text-slate-400">&copy; 2026 OopsDB · MIT License · This guide is general help, not a guarantee of recovery.</p>
+  </div>
+</body><script>feather.replace();</script>
+</html>

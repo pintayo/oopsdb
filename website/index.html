@@ -411,7 +411,18 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-50 py-12 border-t border-slate-200/50 text-center">
+    
+<!-- owned-list capture -->
+<div id="oopsdb-cap" style="max-width:760px;margin:40px auto;padding:26px 28px;background:#0f172a;border-radius:18px;color:#fff;font-family:system-ui,sans-serif">
+  <div style="font-weight:700;font-size:18px;margin-bottom:6px">📋 The 8-step disaster checklist — print it before you need it</div>
+  <div style="color:#94a3b8;font-size:14.5px;margin-bottom:14px">The exact first-10-minutes playbook from this guide, on one page. Get the link by email:</div>
+  <form onsubmit="(function(f){var e=f.email.value;fetch('https://reply.pintayo.nl/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,source:'oopsdb-checklist'})}).then(function(){f.style.display='none';document.getElementById('cap-ok').style.display='block'});})(this);return false" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input name="email" type="email" required placeholder="you@company.com" style="flex:1;min-width:200px;font:15px system-ui;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#fff">
+    <button type="submit" style="font:600 15px system-ui;background:#22c55e;color:#052e16;border:0;border-radius:10px;padding:12px 22px;cursor:pointer">Send me the checklist</button>
+  </form>
+  <div id="cap-ok" style="display:none;font-size:15px;color:#86efac">✓ Sent! Here it is right now too: <a href="/recover/checklist" style="color:#86efac;font-weight:700">open the checklist →</a></div>
+</div>
+<footer class="bg-slate-50 py-12 border-t border-slate-200/50 text-center">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-center gap-2 mb-6 text-slate-400">
                 <i data-feather="database" class="w-5 h-5"></i>

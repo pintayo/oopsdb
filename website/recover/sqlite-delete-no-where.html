@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELETE without WHERE in SQLite? How to recover your data</title>
+<meta name="description" content="Step-by-step recovery after a DELETE without WHERE in SQLite, including when an AI agent like Cursor or Claude Code ran it. Plus how to stop it happening again.">
+<link rel="canonical" href="https://oopsdb.com/recover/sqlite-delete-no-where/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DELETE without WHERE in SQLite? How to recover your data">
+<meta property="og:description" content="Step-by-step recovery after a DELETE without WHERE in SQLite, including when an AI agent like Cursor or Claude Code ran it. Plus how to stop it happening again.">
+<meta property="og:url" content="https://oopsdb.com/recover/sqlite-delete-no-where/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="https://github.com/pintayo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"IBM Plex Sans"','sans-serif'],display:['"Space Grotesk"','sans-serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"DELETE without WHERE in SQLite? How to recover your data","description":"Step-by-step recovery after a DELETE without WHERE in SQLite, including when an AI agent like Cursor or Claude Code ran it. Plus how to stop it happening again.","url":"https://oopsdb.com/recover/sqlite-delete-no-where/","datePublished":"2026-06-09","author":{"@type":"Organization","name":"OopsDB"},"publisher":{"@type":"Organization","name":"OopsDB"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I undo DELETE without WHERE in SQLite?","acceptedAnswer":{"@type":"Answer","text":"If it ran in a transaction that isn't committed yet, run ROLLBACK. Once committed, you can only recover from a backup, a database log (PITR / binlog / WAL), or a managed-host snapshot — covered step by step above."}},{"@type":"Question","name":"An AI agent (Cursor / Claude Code) ran it — does that change anything?","acceptedAnswer":{"@type":"Answer","text":"No. The recovery is identical regardless of who ran the query. What matters is whether the change was committed and whether you have a backup or log from before it. Agents do make this far more likely, which is why an automatic snapshot tool is worth setting up."}},{"@type":"Question","name":"How do I stop this happening again?","acceptedAnswer":{"@type":"Answer","text":"Keep automatic, recent snapshots. OopsDB snapshots your SQLite every few minutes and restores in one command, so a destructive query becomes a quick rollback. It's free and runs locally."}}]}</script>
+</head>
+<body class="bg-white text-slate-700 antialiased">
+<nav class="fixed w-full z-50 bg-white/85 backdrop-blur-md border-b border-slate-200">
+  <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i data-feather="database" class="w-4 h-4"></i></div>
+      <span class="font-display font-bold text-xl tracking-tight text-slate-900">OopsDB</span>
+    </a>
+    <div class="flex items-center gap-6">
+      <a href="/recover/" class="text-sm font-medium text-slate-600 hover:text-slate-900 hidden sm:block">Recovery guides</a>
+      <a href="/#pricing" class="text-sm font-medium text-slate-600 hover:text-slate-900 hidden sm:block">Pricing</a>
+      <a href="https://github.com/pintayo/oopsdb" target="_blank" class="text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-2"><i data-feather="github" class="w-4 h-4"></i><span class="hidden sm:inline">GitHub</span></a>
+    </div>
+  </div>
+</nav>
+<main class="pt-28 pb-10">
+  <div class="max-w-3xl mx-auto px-6">
+    <nav class="text-sm text-slate-500 mb-6"><a href="/recover/" class="hover:text-slate-700">Recovery guides</a> <span class="mx-1">/</span> <span class="text-slate-700">DELETE without WHERE in SQLite</span></nav>
+    <h1 class="font-display text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-5">Recovering from <code class="text-indigo-600">DELETE without WHERE</code> in SQLite</h1>
+    <p class="text-lg text-slate-600 leading-relaxed mb-8">Whether you typed it yourself or your AI agent did, here's exactly what to do after a <code class="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 text-[0.9em]">DELETE without WHERE</code> hit your SQLite — best options first, honest about the rest.</p>
+
+    <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 mb-12">
+      <h2 class="font-display text-lg font-bold text-amber-900 mb-3 flex items-center gap-2"><i data-feather="alert-triangle" class="w-5 h-5"></i> First, in the next 60 seconds</h2>
+      <ul class="space-y-2 text-amber-900/90 text-[15px]">
+        <li class="flex gap-2"><span class="font-bold">1.</span> <span><strong>Stop all writes.</strong> Quit the app, pause the agent, and don't run another query — every write reduces what you can recover.</span></li>
+        <li class="flex gap-2"><span class="font-bold">2.</span> <span><strong>Don't restart, vacuum, or checkpoint</strong> the database. Those steps can permanently overwrite recoverable data.</span></li>
+        <li class="flex gap-2"><span class="font-bold">3.</span> <span><strong>Make a copy of the current state now</strong> (a dump, a snapshot, or the raw file) before you attempt anything.</span></li>
+      </ul>
+    </div>
+
+    <section class="mb-12">
+      <h2 class="font-display text-2xl font-bold text-slate-900 mb-3">What just happened</h2>
+      <p class="text-slate-600 leading-relaxed">A <code>DELETE</code> with no <code>WHERE</code> clause empties every row from the table while leaving the table itself in place. If it ran inside an open transaction you can still <code>ROLLBACK</code>; once committed you need a backup or log.</p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="font-display text-2xl font-bold text-slate-900 mb-6">Your recovery options in SQLite, best first</h2>
+      <ul class="space-y-7"><li class="flex gap-4"><span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-display font-bold text-sm flex items-center justify-center">1</span><div><h3 class="font-display font-semibold text-slate-900 mb-1">Stop and copy the database file now</h3><p class="text-slate-600 leading-relaxed">SQLite is a single file. Before anything else, copy <code>your.db</code>, <code>your.db-wal</code> and <code>your.db-shm</code> somewhere safe. Every further write lowers your chances.</p></div></li>
+<li class="flex gap-4"><span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-display font-bold text-sm flex items-center justify-center">2</span><div><h3 class="font-display font-semibold text-slate-900 mb-1">Recover from the WAL file</h3><p class="text-slate-600 leading-relaxed">If the database is in WAL mode and has not been checkpointed, recently written data may still live in the <code>-wal</code> file. Copy it before any process checkpoints or closes the database cleanly.</p></div></li>
+<li class="flex gap-4"><span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-display font-bold text-sm flex items-center justify-center">3</span><div><h3 class="font-display font-semibold text-slate-900 mb-1">Restore a file backup or VCS copy</h3><p class="text-slate-600 leading-relaxed">A SQLite database is often committed or backed up as a file. Restore the last good copy from your backup, Time Machine, or even git, and reapply recent changes.</p></div></li>
+<li class="flex gap-4"><span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-display font-bold text-sm flex items-center justify-center">4</span><div><h3 class="font-display font-semibold text-slate-900 mb-1">Filesystem undelete (if the file was deleted)</h3><p class="text-slate-600 leading-relaxed">If the whole <code>.db</code> file was removed, stop writing to that disk and run a file-recovery tool (e.g. <code>photorec</code>) — deleted files are often still on disk until overwritten.</p></div></li></ul>
+    </section>
+
+    <section class="mb-4 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+      <h2 class="font-display text-xl font-bold text-slate-900 mb-2">If you have no backup</h2>
+      <p class="text-slate-600 leading-relaxed">If the file was overwritten in place, fully checkpointed, and you kept no copy, SQLite data is gone — there is no server-side log to replay. The only durable protection is a tool that copies the file on a timer.</p>
+    </section>
+
+    <section class="mt-16 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-8">
+    <h2 class="font-display text-2xl font-bold text-slate-900 mb-3">Make sure this never happens again</h2>
+    <p class="text-slate-700 leading-relaxed mb-4">The honest truth: your coding agent will eventually run <code class="font-mono bg-white px-1.5 py-0.5 rounded text-slate-800 text-sm">DELETE without WHERE</code> again. The fix isn't to trust it more — it's to keep an automatic, recent snapshot so a bad query is a 30-second rollback instead of a lost weekend.</p>
+    <p class="text-slate-700 leading-relaxed mb-5"><strong>OopsDB</strong> takes an encrypted snapshot of your SQLite every few minutes and restores it with one command. It's free, open-source, and runs entirely on your machine — set it up in two minutes and the next <code class="font-mono bg-white px-1.5 py-0.5 rounded text-slate-800 text-sm">DELETE without WHERE</code> won't cost you anything.</p>
+    <div class="flex flex-col sm:flex-row gap-3 mb-3">
+      <button onclick="navigator.clipboard.writeText('npm install -g oopsdb')" class="flex items-center justify-between px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-mono text-sm transition-colors"><span><span class="text-slate-500">$</span> npm install -g oopsdb</span><i data-feather="copy" class="w-4 h-4 ml-6 text-slate-500"></i></button>
+      <a href="/#how" class="flex items-center justify-center px-6 py-3.5 text-slate-900 border border-slate-300 rounded-xl font-semibold hover:bg-white transition-colors">See how it works</a>
+    </div>
+    <p class="text-xs text-slate-500">Free &amp; open-source for local backups · optional €8/mo cloud vault keeps a copy off your machine · <a href="https://pintayo.lemonsqueezy.com/checkout/buy/dc9a05fe-5bad-4a58-a94f-c7963e0d7995" class="underline hover:text-slate-700">cancel anytime</a>.</p>
+  </section>
+    <section class="mt-14">
+    <h2 class="font-display text-xl font-bold text-slate-900 mb-4">Related recovery guides</h2>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <a href="/recover/sqlite-drop-table/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>Recover from DROP TABLE in SQLite</a>
+<a href="/recover/sqlite-truncate/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>Recover from TRUNCATE in SQLite</a>
+<a href="/recover/sqlite-drop-database/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>Recover from DROP DATABASE in SQLite</a>
+<a href="/recover/postgres-delete-no-where/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>DELETE without WHERE in Postgres</a>
+<a href="/recover/supabase-delete-no-where/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>DELETE without WHERE in Supabase</a>
+<a href="/recover/mysql-delete-no-where/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>DELETE without WHERE in MySQL</a>
+<a href="/recover/neon-delete-no-where/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>DELETE without WHERE in Neon</a>
+<a href="/recover/cursor-deleted-my-database/" class="flex items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"><i data-feather="life-buoy" class="w-4 h-4 text-indigo-600 shrink-0"></i>Cursor deleted my database</a>
+    </div>
+  </section>
+  </div>
+</main>
+
+<!-- owned-list capture -->
+<div id="oopsdb-cap" style="max-width:760px;margin:40px auto;padding:26px 28px;background:#0f172a;border-radius:18px;color:#fff;font-family:system-ui,sans-serif">
+  <div style="font-weight:700;font-size:18px;margin-bottom:6px">📋 The 8-step disaster checklist — print it before you need it</div>
+  <div style="color:#94a3b8;font-size:14.5px;margin-bottom:14px">The exact first-10-minutes playbook from this guide, on one page. Get the link by email:</div>
+  <form onsubmit="(function(f){var e=f.email.value;fetch('https://reply.pintayo.nl/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,source:'oopsdb-checklist'})}).then(function(){f.style.display='none';document.getElementById('cap-ok').style.display='block'});})(this);return false" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input name="email" type="email" required placeholder="you@company.com" style="flex:1;min-width:200px;font:15px system-ui;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#fff">
+    <button type="submit" style="font:600 15px system-ui;background:#22c55e;color:#052e16;border:0;border-radius:10px;padding:12px 22px;cursor:pointer">Send me the checklist</button>
+  </form>
+  <div id="cap-ok" style="display:none;font-size:15px;color:#86efac">✓ Sent! Here it is right now too: <a href="/recover/checklist" style="color:#86efac;font-weight:700">open the checklist →</a></div>
+</div>
+<footer class="py-12 border-t border-slate-200 text-center">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="flex items-center justify-center gap-2 mb-4">
+      <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i data-feather="database" class="w-4 h-4"></i></div>
+      <span class="font-display font-bold text-lg text-slate-900">OopsDB</span>
+    </div>
+    <p class="text-slate-500 mb-6 text-sm">An undo button for the day your AI agent gets too confident.</p>
+    <div class="flex justify-center gap-6 text-sm font-medium text-slate-500">
+      <a href="/" class="hover:text-slate-900">Home</a>
+      <a href="/recover/" class="hover:text-slate-900">All recovery guides</a>
+      <a href="https://github.com/pintayo/oopsdb" target="_blank" class="hover:text-slate-900">GitHub</a>
+      <a href="https://www.npmjs.com/package/oopsdb" target="_blank" class="hover:text-slate-900">npm</a>
+    </div>
+    <p class="mt-8 text-xs text-slate-400">&copy; 2026 OopsDB · MIT License · This guide is general help, not a guarantee of recovery.</p>
+  </div>
+</body><script>feather.replace();</script>
+</html>
